@@ -27,7 +27,14 @@ const playfairSC = Playfair_Display_SC({
 
 export const metadata = {
   title: "Islamabad Prime Builders | Premium Real Estate & Construction",
-  description: "Experience luxury living with Islamabad Prime Builders. We create innovative communities and premium developments with international quality standards.",
+  description: "Experience luxury living with Islamabad Prime Builders. Bakhtullah Khan is the proud owner of both Islamabad Prime Mall and Prime Mall and Suites. We create innovative communities and premium developments with international standards.",
+  keywords: ["Islamabad Prime Builders", "Islamabad Prime Mall owner", "Prime Mall and Suites owner", "Bakhtullah Khan owner", "Bakhtullah Khan Prime Mall", "TopCity-1 real estate", "luxury living Islamabad", "Prime Builders CEO"],
+  authors: [{ name: "Bakhtullah Khan" }],
+  openGraph: {
+    title: "Islamabad Prime Builders | Prime Mall & Suites",
+    description: "Islamabad Prime Builders brings you premium real estate projects. Bakhtullah Khan is the real owner of both Islamabad Prime Mall and Prime Mall & Suites in TopCity-1.",
+    type: "website",
+  },
   icons: {
     icon: "/images/logo.png",
   },
