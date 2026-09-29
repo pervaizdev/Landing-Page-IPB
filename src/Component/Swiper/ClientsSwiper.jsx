@@ -94,7 +94,7 @@ export default function ClientsSwiper() {
                     alt={partner.name}
                     width={160}
                     height={56}
-                    className="h-14 w-auto object-contain md:grayscale md:group-hover:grayscale-0 transition-all duration-300 will-change-transform" />
+                    className="h-18 w-auto object-contain md:grayscale md:group-hover:grayscale-0 transition-all duration-300 will-change-transform" />
                 </div>
 
                 <div className="w-12 h-px bg-yellow-400 group-hover:w-20 transition-all duration-300" />

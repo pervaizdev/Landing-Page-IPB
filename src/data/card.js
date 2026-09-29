@@ -61,7 +61,7 @@ export const projects = [
     availability: "Booking Available",
     location: "TopCity-1",
     mapUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1976.3239083764277!2d72.86806109282423!3d33.585388544640914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df99451f7f9ac7%3A0xd5f412e595daa5b9!2sPrime%20Mall!5e0!3m2!1sen!2s!4v1772366366281!5m2!1sen!2s", title: "Prime Mall And Suites",
+      "https://maps.google.com/maps?q=33.5857,72.8692&t=&z20&ie=UTF8&iwloc=&output=embed",
     title: "Prime Mall And Suites",
     image: "/images/1 a.png",
 
