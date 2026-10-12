@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaInstagram, FaYoutube , FaFacebookF } from "react-icons/fa";
+import { FaInstagram, FaYoutube, FaFacebookF, FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -22,6 +22,7 @@ const stagger = {
 const footerLinks = [
   { name: "Home", href: "/" },
   { name: "Projects", href: "/projects" },
+  { name: "Booking", href: "/booking" },
   { name: "Awards", href: "/awards" },
   { name: "Services", href: "/services" },
   { name: "About Us", href: "/about" },
@@ -127,16 +128,45 @@ export default function FooterSection() {
             >
               <p className="text-sm font-bold text-black mb-4">Contact</p>
 
-              <a
-                href="tel:+9208412345688"
-                className="block text-lg font-semibold text-black hover:opacity-80 transition"
-              >
-                +92 312 2222 321
-              </a>
+              <div className="space-y-3">
+                {/* WhatsApp */}
+                <a
+                  href="https://wa.me/923122222321"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center md:justify-start gap-3 group transition"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition duration-200">
+                    <FaWhatsapp className="text-lg" />
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-base font-bold text-black group-hover:text-[#25D366] transition">
+                      +92 312 2222 321
+                    </span>
+                   
+                  </div>
+                </a>
+
+                {/* Telephone / PTCL */}
+                <a
+                  href="tel:+92517234000"
+                  className="flex items-center justify-center md:justify-start gap-3 group transition"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c29e6d]/20 text-[#8B5E3C] group-hover:bg-[#c29e6d] group-hover:text-white transition duration-200">
+                    <FaPhoneAlt className="text-sm" />
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-base font-bold text-black group-hover:text-[#8B5E3C] transition">
+                      +92 51 7234000
+                    </span>
+                   
+                  </div>
+                </a>
+              </div>
 
               <a
                 href="mailto:Info@IslamabadPrimeBuilders.com"
-                className="mt-2 inline-block text-sm font-semibold text-black underline underline-offset-4 hover:opacity-80 transition"
+                className="mt-4 inline-block text-sm font-semibold text-black underline underline-offset-4 hover:text-[#8B5E3C] transition"
               >
                 Info@IslamabadPrimeBuilders.com
               </a>

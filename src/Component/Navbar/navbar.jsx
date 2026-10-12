@@ -10,6 +10,7 @@ import { HiBars3BottomRight, HiXMark } from "react-icons/hi2";
 const NAV_ITEMS = [
   { name: "Home", path: "/" },
   { name: "Projects", path: "/projects" },
+  { name: "Booking", path: "/booking" },
   { name: "Awards", path: "/awards" },
   { name: "Services", path: "/services" },
   { name: "About Us", path: "/about" },
@@ -22,6 +23,7 @@ export default function Navbar() {
   const isTransparentNavbar =
     isHome ||
     pathname === "/projects" ||
+    pathname === "/booking" ||
     pathname === "/services" ||
     pathname === "/about" ||
     pathname === "/contact" ||
@@ -73,7 +75,7 @@ export default function Navbar() {
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <nav className="mx-auto w-[92%] max-w-6xl">
+      <nav className="mx-auto w-[95%] max-w-7xl 2xl:max-w-[1440px]">
         <motion.div
           animate={
             scrolledMobile
@@ -102,8 +104,8 @@ export default function Navbar() {
               
                 }
                 : {
-                  paddingLeft: 16,
-                  paddingRight: 16,
+                  paddingLeft: 24,
+                  paddingRight: 24,
                   paddingTop: 12,
                   paddingBottom: 12,
                   backgroundColor: "#ffffff",
