@@ -96,7 +96,7 @@ export default function CallBackSection() {
 
 
   return (
-    <section id="callback-section" className="scroll-mt-6 bg-white py-16 text-black md:py-24">
+    <section className="bg-white py-16 text-black md:py-24">
       <div className="mx-auto max-w-7xl px-2">
         {/* Background Container (NO ANIMATION) */}
         <div
