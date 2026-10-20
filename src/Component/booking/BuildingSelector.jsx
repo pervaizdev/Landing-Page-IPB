@@ -1,145 +1,219 @@
+
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { HiLocationMarker } from "react-icons/hi";
-import { HiArrowRight, HiCheck, HiOutlineInformationCircle } from "react-icons/hi2";
-import { allUnits } from "./BuildingOverview";
-import { projects } from "@/data/card";
 
-// Buildings that have a matching /projects/[slug] detail page
-const projectIds = new Set(projects.map((p) => p.id));
-
-const BUILDING_META = {
+const PROJECT_META = {
   "prime-mall": {
-    statusTag: "Completed",
-    tagStyle: "bg-[#c29e6d] text-black border border-[#e5c488]/60 shadow-sm",
-    location: "Plot # 5, Kunwar TopCity-1, Sahara Kashmir Rd",
+    status: "Delivered Project",
+    subtitle: "Commercial",
   },
   "prime-mall-and-suites": {
-    statusTag: "On Progress",
-    tagStyle: "bg-[#c29e6d] text-black border border-[#e5c488]/60 shadow-sm",
-    location: "Plot # 3, K-Block TopCity-1, Islamabad",
+    status: "Ongoing Project",
+    subtitle: "Commercial & Furnished Apartments",
   },
   "prime-gold": {
-    statusTag: "Coming Soon",
-    tagStyle: "bg-[#c29e6d] text-black border border-[#e5c488]/60 shadow-sm",
-    location: "TopCity-1, Islamabad",
+    status: "Coming Soon",
+    subtitle: "Premium Residential",
   },
 };
 
-const getBuildingMeta = (building) => {
-  if (BUILDING_META[building.id]) return BUILDING_META[building.id];
-  const normalized = (building.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-  if (normalized.includes("primemallandsuites")) return BUILDING_META["prime-mall-and-suites"];
-  if (normalized.includes("primemall")) return BUILDING_META["prime-mall"];
-  if (normalized.includes("primegold")) return BUILDING_META["prime-gold"];
-  return null;
-};
-
-/**
- * onSelect(id, target) — target is "overview" (card click) or "floors" (Explore Building).
- * Details links to the building's project page.
- */
-export default function BuildingSelector({ buildings, selectedId, onSelect }) {
+export default function BuildingSelector({
+  buildings,
+  selectedId,
+  onSelect,
+}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-      {buildings.map((building, i) => {
-        const units = allUnits(building);
-        const isActive = building.id === selectedId;
-        const meta = getBuildingMeta(building);
-        const location = meta?.location || building.location;
+    <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
+      {buildings.map((building, index) => {
+        const selected = selectedId === building.id;
+        const meta = PROJECT_META[building.id];
 
-        const handle = (target) => (e) => {
-          e.stopPropagation();
-          onSelect(building.id, target);
-        };
+        const isAmberTitle = [
+          "prime-mall-and-suites",
+          "prime-gold",
+        ].includes(building.id);
 
         return (
-          <motion.div
+          <motion.button
             key={building.id}
-            role="button"
-            tabIndex={0}
+            type="button"
             onClick={() => onSelect(building.id, "overview")}
-            onKeyDown={(e) => {
-              if (e.target !== e.currentTarget) return;
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onSelect(building.id, "overview");
-              }
-            }}
-            initial={{ opacity: 0, y: 30 }}
+            aria-pressed={selected}
+            aria-label={`Explore ${building.name}`}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -6 }}
-            aria-pressed={isActive}
-            className={`group relative h-[380px] sm:h-[420px] lg:h-[460px] w-full cursor-pointer overflow-hidden rounded-[26px] sm:rounded-[30px] text-left shadow-xl outline-none transition-shadow focus-visible:ring-4 focus-visible:ring-[#c29e6d]/60 ${
-              isActive ? "ring-4 ring-[#c29e6d] shadow-[#c29e6d]/30" : ""
-            }`}
+            transition={{
+              duration: 0.6,
+              delay: index * 0.08,
+            }}
+            className={`
+              group relative block w-full
+              h-[380px] md:h-[430px] lg:h-[510px]
+              cursor-pointer overflow-hidden
+              rounded-2xl lg:rounded-[28px]
+              border-4 text-left
+              transition-all duration-500
+              focus-visible:outline-none
+              focus-visible:ring-4
+              focus-visible:ring-[#c29e6d]/40
+              ${selected
+                ? "border-[#c29e6d] ring-2 ring-[#c29e6d]/30 shadow-[0_12px_40px_rgba(194,158,109,0.35)]"
+                : "border-transparent shadow-lg hover:border-[#c29e6d]/50 hover:shadow-2xl"
+              }
+`}
           >
-            <Image
-              src={building.image}
-              alt={building.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/45 to-transparent" />
+            {/* Building Image */}
+            {building.image && (
+              <Image
+                src={building.image}
+                alt={building.name}
+                fill
+                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 33vw, 33vw"
+                className="
+                  object-cover
+                  transition-transform duration-700 ease-out
+                  group-hover:scale-[1.06]
+                  group-focus-visible:scale-[1.06]
+                "
+              />
+            )}
+
+            {/* Image Gradient */}
             <div
-              className={`absolute inset-0 bg-black/40 transition-opacity duration-500 ${
-                selectedId && !isActive ? "opacity-100 group-hover:opacity-0" : "opacity-0"
-              }`}
+              className="
+                absolute inset-0
+                bg-gradient-to-t
+                from-black/95 via-black/30 to-black/15
+                transition-all duration-500
+              "
             />
 
-            <div className="absolute inset-0 flex flex-col p-5 sm:p-6 text-white">
-              <div className="flex items-center justify-between gap-2 flex-wrap">
-                <span className="rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold bg-black/60 border border-white/20 backdrop-blur-md">
-                  {building.projectType}
-                </span>
-                {meta?.statusTag && (
-                  <span
-                    className={`rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold ${meta.tagStyle}`}
+            {/* Top Badges */}
+            <div
+              className="
+                absolute inset-x-0 top-0
+                flex flex-wrap items-start
+                justify-between gap-2
+                p-3 lg:p-5
+              "
+            >
+              <span
+                className="
+                  rounded-full
+                  border border-white/15
+                  bg-black/65
+                  px-3 py-1.5
+                  text-[10px] lg:text-xs
+                  font-semibold text-white
+                  backdrop-blur-md
+                  whitespace-nowrap
+                "
+              >
+                {meta?.status ?? "Project"}
+              </span>
+
+              <span
+                className="
+                  rounded-full
+                  bg-[#c29e6d]
+                  px-3 py-1.5
+                  text-[10px] lg:text-xs
+                  font-bold text-black
+                  shadow-sm
+                  whitespace-nowrap
+                "
+              >
+                Booking Available
+              </span>
+            </div>
+
+            {/* Bottom Building Details */}
+            <div
+              className="
+                absolute inset-x-0 bottom-0
+                p-4 lg:p-6
+                pb-6 lg:pb-9
+                text-white
+              "
+            >
+              <div
+                className="
+                  translate-y-3 opacity-0
+                  transition-all duration-500 ease-out
+                  group-hover:translate-y-0
+                  group-hover:opacity-100
+                  group-focus-visible:translate-y-0
+                  group-focus-visible:opacity-100
+                  [@media(hover:none)]:translate-y-0
+                  [@media(hover:none)]:opacity-100
+                "
+              >
+                {/* Gold Accent */}
+                <div className="mb-3 h-[2px] w-14 bg-[#c29e6d] lg:w-16" />
+
+                {/* Building Name */}
+                <h3
+                  className={`
+                    parisienne-font
+                    text-3xl lg:text-4xl
+                    font-bold leading-tight
+                    ${isAmberTitle
+                      ? "text-amber-400"
+                      : "text-white"
+                    }
+                  `}
+                >
+                  {building.name}
+                </h3>
+
+                {/* Building Type */}
+                <p
+                  className="
+                    mt-2
+                    text-sm lg:text-base
+                    font-medium tracking-wide
+                    text-white/85
+                    leading-relaxed
+                  "
+                >
+                  {meta?.subtitle ?? building.projectType}
+                </p>
+
+                {/* Dynamic Location */}
+                {building.location && (
+                  <div
+                    className="
+                      mt-3 flex items-start gap-2
+                      text-white/75
+                    "
                   >
-                    {meta.statusTag}
-                  </span>
+                    <HiLocationMarker
+                      className="
+                        mt-0.5 shrink-0
+                        text-base
+                        text-[#c29e6d]
+                      "
+                    />
+
+                    <p
+                      className="
+                        min-w-0
+                        line-clamp-2
+                        text-xs lg:text-sm
+                        leading-relaxed
+                      "
+                    >
+                      {building.location}
+                    </p>
+                  </div>
                 )}
               </div>
-
-              <div className="mt-auto">
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-white/85">
-                  <HiLocationMarker className="text-lg sm:text-xl text-[#c29e6d] shrink-0" />
-                  <span className="line-clamp-1" title={location}>{location}</span>
-                </div>
-                <hr className="my-3 sm:my-4 border-white/25" />
-                <h3 className="text-2xl sm:text-3xl font-extrabold leading-tight">{building.name}</h3>
-
-                {/* Action buttons — bottom right */}
-                <div className="mt-5 sm:mt-6 flex items-center justify-end gap-2 sm:gap-2.5 flex-wrap">
-                  <button
-                    type="button"
-                    className={`group/btn inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]/70 ${
-                      isActive
-                        ? "bg-linear-to-r from-[#d1b38c] to-[#a8824f] text-black shadow-[#c29e6d]/40"
-                        : "bg-[#c29e6d] text-black hover:bg-[#d8b986] hover:shadow-[#c29e6d]/50"
-                    }`}
-                  >
-                    {isActive ? "Selected" : "Explore Building"}
-                  </button>
-                  {projectIds.has(building.id) && (
-                    <Link
-                      href={`/projects/${building.id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                    >
-                      Details
-                    </Link>
-                  )}
-                </div>
-              </div>
             </div>
-          </motion.div>
+          </motion.button>
         );
       })}
     </div>

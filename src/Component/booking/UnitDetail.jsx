@@ -1,152 +1,147 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa";
+import Link from "next/link";
 import { HiXMark } from "react-icons/hi2";
 import {
+  StatusDot,
   formatArea,
-  formatCompactPKR,
+  formatMillions,
   formatPKR,
-  statusStyle,
-  unitCategory,
-  unitTypeLabel,
+  statusColors,
+  unitClass,
+  unitLabel,
+  unitTypeShort,
 } from "./UnitCard";
-import bookingData from "@/data/booking.json";
 
-function whatsappLink(building, floor, unit) {
-  const text = [
-    "Assalam o Alaikum, I am interested in booking:",
-    `Project: ${building.name}`,
-    `Floor: ${floor.name}`,
-    `Unit: ${unit.number} (${unitTypeLabel(unit.type)})`,
-    `Area: ${formatArea(unit.areaSqFt)}`,
-    `Price: ${formatPKR(unit.pricePkr)}`,
-  ].join("\n");
-  return `https://wa.me/${bookingData.config.whatsappNumber}?text=${encodeURIComponent(text)}`;
-}
+const hasNumber = (value) => value != null && value !== "" && Number.isFinite(Number(value));
+const propertyType = (unit) => [unitClass(unit), unitTypeShort(unit)].filter(Boolean).join(" ");
 
-function Stat({ label, value }) {
+function DetailRow({ label, value, prominent = false }) {
   return (
-    <div className="rounded-2xl bg-gray-50 p-3">
-      <p className="text-[11px] uppercase tracking-wider text-gray-400">{label}</p>
-      <p className="mt-0.5 text-sm font-semibold text-gray-900">{value}</p>
+    <div className="flex items-start justify-between gap-4 border-b border-gray-100 py-2 last:border-b-0">
+      <span className="min-w-0 text-sm leading-5 text-gray-600">{label}</span>
+      <span className={`min-w-0 max-w-[58%] text-right leading-5 text-[#153D2A] ${prominent ? "text-base font-bold" : "text-sm font-semibold"}`}>
+        {value}
+      </span>
     </div>
   );
 }
 
-export default function UnitDetail({ building, floor, unit, onClose }) {
-  const st = statusStyle(unit.status);
-  const isOpen = unit.status === "Available";
-  const installmentsTotal = (unit.monthlyInstallmentPkr ?? 0) * (unit.installmentMonths ?? 0);
-  const bookingShare = unit.pricePkr ? (unit.bookingAmountPkr / unit.pricePkr) * 100 : 0;
+export default function UnitDetail({ building, floor, unit, onClose, layout = "modal" }) {
+  const isSidebar = layout === "sidebar";
+  const closeRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    const trigger = !isSidebar ? document.activeElement : null;
+    if (!isSidebar) closeRef.current?.focus({ preventScroll: true });
+    const onKey = (event) => event.key === "Escape" && onCloseRef.current?.();
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      if (!isSidebar && trigger instanceof HTMLElement && document.contains(trigger)) {
+        trigger.focus({ preventScroll: true });
+      }
+    };
+  }, [isSidebar]);
+
+  const title = unitLabel(unit, floor);
+  const colors = statusColors(unit.status);
+  const months = Number(unit.installmentMonths) || 0;
+  const hasDown = hasNumber(unit.bookingAmountPkr) && Number(unit.bookingAmountPkr) > 0;
+  const hasMonthly = hasNumber(unit.monthlyInstallmentPkr) && Number(unit.monthlyInstallmentPkr) > 0;
+  const installmentsTotal = hasMonthly && months > 0 ? Number(unit.monthlyInstallmentPkr) * months : null;
+  const downPct = hasDown && Number(unit.pricePkr) > 0
+    ? `${Number(((Number(unit.bookingAmountPkr) / Number(unit.pricePkr)) * 100).toFixed(1))}%`
+    : null;
+  const paidSum = installmentsTotal != null && hasDown ? Number(unit.bookingAmountPkr) + installmentsTotal : null;
+  const discrepancy = paidSum != null && hasNumber(unit.pricePkr) && Math.abs(paidSum - Number(unit.pricePkr)) > 100;
 
   return (
     <motion.div
       key={unit.id}
-      initial={{ opacity: 0, y: 10 }}
+      role={isSidebar ? "region" : "dialog"}
+      aria-label={`${title} details`}
+      data-lenis-prevent
+      initial={{ opacity: 0, y: isSidebar ? 0 : 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-xl shadow-black/5"
+      className={`flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#E8DFD2] bg-white shadow-sm ${isSidebar ? "max-h-[calc(100dvh-1.5rem)]" : ""}`}
     >
-      <div className="p-4 sm:p-6 text-left">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-[11px] sm:text-xs uppercase tracking-wider text-[#8B5E3C] font-semibold">
-              {building.name} · {floor.name}
-            </p>
-            <h3 className="mt-0.5 sm:mt-1 text-2xl sm:text-3xl font-extrabold text-gray-900">{unit.number}</h3>
-            <p className="text-xs sm:text-sm text-gray-600">
-              {unitTypeLabel(unit.type)} · {unitCategory(unit)}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className={`rounded-full border px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold ${st.badge}`}>{unit.status}</span>
+      <div className={`flex min-h-0 flex-1 flex-col ${isSidebar ? "p-3" : "p-4 sm:p-5"}`}>
+        <div className="shrink-0 border-b border-gray-200 pb-2.5">
+          <div className="flex items-start justify-between gap-3">
+            <p className="min-w-0 pt-1 text-sm font-semibold text-[#A58253]">{building.name}</p>
             <button
+              ref={closeRef}
               type="button"
               onClick={onClose}
               aria-label="Close details"
-              className="grid h-8 w-8 place-items-center rounded-full border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer"
+              className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]"
             >
-              <HiXMark className="text-lg" />
+              <HiXMark className="text-lg" aria-hidden="true" />
             </button>
           </div>
+          <div className="mt-1 flex items-center justify-between gap-3">
+            <h3 className="min-w-0 break-words text-xl font-bold leading-tight text-[#153D2A]">{title}</h3>
+            <span
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold"
+              style={{ backgroundColor: colors.bg, color: colors.text }}
+            >
+              <StatusDot status={unit.status} />
+              {unit.status}
+            </span>
+          </div>
+        </div>
+        <div className={`min-h-0 flex-1 overscroll-contain ${isSidebar ? "overflow-y-auto pr-1 [scrollbar-width:thin]" : ""}`} data-lenis-prevent>
+        <div className="pt-2">
+          {hasNumber(unit.pricePkr) && <DetailRow label="Total price" value={`PKR ${formatPKR(unit.pricePkr)}`} prominent />}
+          <DetailRow label="Property type" value={propertyType(unit) || "—"} />
+          <DetailRow label="Floor" value={floor.name} />
+          {hasNumber(unit.areaSqFt) && <DetailRow label="Area" value={formatArea(unit.areaSqFt)} />}
+          {hasNumber(unit.pricePerSqFt) && <DetailRow label="Price per sq.ft" value={`PKR ${formatPKR(unit.pricePerSqFt)}`} />}
+          {unit.facing && <DetailRow label="Facing" value={unit.facing} />}
+          {unit.position && <DetailRow label="Position" value={unit.position} />}
+          {unit.features?.length > 0 && (
+            <DetailRow label="Features" value={unit.features.join(", ")} />
+          )}
         </div>
 
-        {unit.features?.length > 0 && (
-          <div className="mt-3 sm:mt-4 flex flex-wrap gap-1.5">
-            {unit.features.map((f) => (
-              <span key={f} className="rounded-full bg-emerald-50/80 border border-emerald-900/10 px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-semibold text-[#0f3d20]">
-                {f}
-              </span>
-            ))}
-          </div>
+        {(hasDown || hasMonthly) && (
+          <section aria-label="Payment details" className="mt-2.5">
+            <h4 className="border-b border-gray-200 pb-1.5 text-base font-bold text-[#153D2A]">Payment details</h4>
+            {hasDown && (
+              <DetailRow
+                label={downPct ? `Initial payment (${downPct})` : "Initial payment"}
+                value={`PKR ${formatPKR(unit.bookingAmountPkr)}`}
+              />
+            )}
+            {hasMonthly && <DetailRow label="Monthly payment" value={`PKR ${formatPKR(unit.monthlyInstallmentPkr)}`} />}
+            {months > 0 && <DetailRow label="Payment period" value={`${months} months`} />}
+            {installmentsTotal != null && <DetailRow label="Total monthly payments" value={`PKR ${formatPKR(installmentsTotal)}`} />}
+            {discrepancy && (
+              <p className="mt-2 text-xs leading-relaxed text-[#946b39]">
+                Note: the initial payment plus monthly payments ({formatPKR(paidSum)} PKR) differs from the listed total price ({formatPKR(unit.pricePkr)} PKR).
+              </p>
+            )}
+          </section>
         )}
 
-        {/* Clean Luxury Total Price Card */}
-        <div className="mt-4 sm:mt-5 rounded-2xl bg-[#faf8f5] border border-[#eee5d8] p-3.5 sm:p-4.5 shadow-2xs">
-          <div className="flex items-baseline justify-between gap-2">
-            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#8B5E3C]">Total Price</p>
-            <span className="text-xs font-semibold text-gray-500">{formatCompactPKR(unit.pricePkr)}</span>
-          </div>
-          <p className="mt-1 text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0f3d20] tracking-tight truncate">{formatPKR(unit.pricePkr)}</p>
+        {unit.note && <p className="mt-3 text-sm leading-relaxed text-gray-600">{unit.note}</p>}
+
         </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <Stat label="Area" value={formatArea(unit.areaSqFt)} />
-          <Stat label="Rate / sq.ft" value={formatPKR(unit.pricePerSqFt)} />
-          {unit.facing && <Stat label="Facing" value={unit.facing} />}
-          {unit.position && <Stat label="Position" value={unit.position} />}
-        </div>
-
-        {unit.bookingAmountPkr != null && (
-          <div className="mt-5">
-            <h4 className="text-sm font-bold text-gray-900">Payment plan</h4>
-            <div className="mt-3 flex h-2.5 overflow-hidden rounded-full bg-gray-100">
-              <div className="bg-[#0f3d20]" style={{ width: `${bookingShare}%` }} />
-              <div className="flex-1 bg-gray-300" />
-            </div>
-            <div className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between gap-3">
-                <span className="flex items-center gap-2 text-gray-600">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#0f3d20]" />
-                  Booking ({Math.round(bookingShare)}%)
-                </span>
-                <span className="font-semibold text-gray-900">{formatPKR(unit.bookingAmountPkr)}</span>
-              </div>
-              {unit.installmentMonths > 0 && (
-                <div className="flex justify-between gap-3">
-                  <span className="flex items-center gap-2 text-gray-600">
-                    <span className="h-2.5 w-2.5 rounded-full bg-gray-400" />
-                    {unit.installmentMonths} monthly installments
-                  </span>
-                  <span className="font-semibold text-gray-900">{formatPKR(unit.monthlyInstallmentPkr)} / mo</span>
-                </div>
-              )}
-              {installmentsTotal > 0 && (
-                <div className="flex justify-between gap-3 border-t border-gray-100 pt-2 text-xs text-gray-500">
-                  <span>Installments total</span>
-                  <span>{formatPKR(installmentsTotal)}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {unit.note && <p className="mt-5 rounded-xl bg-gray-50 p-3 text-xs leading-relaxed text-gray-500">{unit.note}</p>}
-
-        {/* WhatsApp CTA Button */}
-        <a
-          href={whatsappLink(building, floor, unit)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`mt-6 flex w-full items-center justify-center gap-2.5 rounded-full px-5 py-3.5 text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.99] cursor-pointer ${isOpen
-              ? "bg-[#0f3d20] text-white hover:bg-[#16562f]"
-              : "bg-gray-800 text-white hover:bg-gray-900"
-            }`}
+        <Link
+          href="/contact"
+          className="mt-2.5 flex min-h-11 w-full shrink-0 items-center justify-center rounded-full bg-[#153D2A] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1d5238] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A06B] focus-visible:ring-offset-2"
         >
-          <FaWhatsapp className={`text-xl ${isOpen ? "text-[#25D366]" : "text-gray-300"}`} />
-          <span>{isOpen ? "Book this unit on WhatsApp" : `Unit is ${unit.status.toLowerCase()}, ask for similar`}</span>
-        </a>
+          Contact Us
+        </Link>
       </div>
     </motion.div>
   );

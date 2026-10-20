@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 import FooterSection from "@/Component/Footer/footer";
 import BuildingSelector from "@/Component/booking/BuildingSelector";
-import BuildingOverview from "@/Component/booking/BuildingOverview";
+import FindYourUnit from "@/Component/booking/FindYourUnit";
 import FloorExplorer from "@/Component/booking/FloorExplorer";
 import BrochureBook from "@/Component/booking/BrochureBook";
 import bookingData from "@/data/booking.json";
@@ -19,10 +19,12 @@ const BROCHURE_PAGES = Array.from(
 export default function BookingPage() {
   const lenis = useLenis();
   const [buildingId, setBuildingId] = useState(null);
+  const [selectedTypes, setSelectedTypes] = useState([]); // [] = All Units
   const building = bookingData.buildings.find((b) => b.id === buildingId) ?? null;
 
   const selectBuilding = (id, target = "overview") => {
     setBuildingId(id);
+    setSelectedTypes([]);
     const anchor = target === "floors" ? "#floor-explorer" : "#building-overview";
     // wait for the selected building to render before scrolling
     setTimeout(() => lenis?.scrollTo(anchor, { offset: -100 }), 50);
@@ -80,7 +82,7 @@ export default function BookingPage() {
       {/* SCROLLING CONTENT */}
       <div className="relative z-20 mt-[170px] lg:mt-[-90px] bg-white rounded-t-3xl lg:rounded-t-[60px] pt-12">
         <hr className="border-gray-700 mt-5 lg:mt-10 mx-4 lg:mx-8" />
-        <div className="container mx-auto px-4 lg:px-8 pb-24 mt-15 space-y-14">
+        <div className="mx-auto w-full max-w-[1504px] px-4 lg:px-8 pb-24 mt-15 space-y-14">
           <section>
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <motion.span
@@ -91,7 +93,7 @@ export default function BookingPage() {
                 className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-sm"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
-                Our Projects
+                For Booking
               </motion.span>
 
               <motion.h2
@@ -141,39 +143,49 @@ export default function BookingPage() {
                 transition={{ duration: 0.3 }}
                 className="space-y-14"
               >
-                <BuildingOverview building={building} />
+
+                <FindYourUnit building={building} selected={selectedTypes} onChange={setSelectedTypes} />
+
                 <div id="floor-explorer">
-                  <FloorExplorer building={building} />
+                  <FloorExplorer
+                    key={building.id}
+                    building={building}
+                    selectedTypes={selectedTypes}
+                    onTypesChange={setSelectedTypes}
+                  />
                 </div>
+
+                {building.name?.trim().toLowerCase() === "prime mall & suites" && (
+                  <section>
+                    <div className="mx-auto mb-12 max-w-3xl text-center">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
+                        Our Brochure
+                      </span>
+                      <motion.h2
+                        initial={{ opacity: 0, y: 28 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="mt-5 text-4xl parisienne-font text-[#0f3d20] lg:text-5xl"
+                      >
+                        {building?.name} Brochure
+                      </motion.h2>
+                      <p className="mx-auto mt-5 max-w-2xl leading-7 text-gray-500 md:text-base">
+                        Explore the {building?.name} brochure. Drag a page to discover more about the project.
+                      </p>
+                    </div>
+                    <BrochureBook
+                      pages={BROCHURE_PAGES}
+                      building={building}
+                      title="Prime Mall & Suites brochure"
+                      pageAspect={1}
+                    />
+                  </section>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
-
-          <section>
-            <div className="mx-auto mb-12 max-w-3xl mt-[130px] text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
-                Brochure
-              </span>
-              <motion.h2
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                className="text-4xl lg:text-5xl mt-5 parisienne-font text-[#0f3d20]"
-              >
-                Our Brochure
-              </motion.h2>
-              <p className="mx-auto mt-5 max-w-2xl leading-7 text-gray-500 md:text-base">
-                Grab a page and drag it across to turn through the brochure.
-              </p>
-            </div>
-            <BrochureBook
-              pages={BROCHURE_PAGES}
-              title="Prime Mall brochure"
-              pageAspect={1}
-            />
-          </section>
         </div>
 
         <FooterSection />

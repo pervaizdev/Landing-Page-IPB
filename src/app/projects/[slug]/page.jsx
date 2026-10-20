@@ -10,12 +10,12 @@ import Description from "@/Component/ProjectDescription.jsx";
 import MediaSection from "@/Component/MediaSection";
 import Location from "@/Component/Location";
 import { motion } from "framer-motion";
-
 import {
   AnimatedSection,
   AnimatedImage,
   AnimatedDivider,
 } from "@/Component/AnimationWrappers";
+import ProjectUnitExplorer from "@/Component/ProjectUnitExplorer";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -123,6 +123,11 @@ export default function Page({ params }) {
         <AnimatedSection >
           <MediaSection project={project} />
         </AnimatedSection>
+
+        <ProjectUnitExplorer
+          key={project.id}
+          project={project}
+        />
 
         <AnimatedSection className="container mx-auto">
           <Location project={project} />
