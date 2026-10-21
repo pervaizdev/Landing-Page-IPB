@@ -164,24 +164,61 @@ export default function UnitCard({ unit, floor, isActive, onSelect }) {
     </motion.article>
   );
 }
+
 export function UnitRow({ unit, floor, isActive, onSelect }) {
   const { amount } = downPayment(unit);
+
   return (
     <motion.article
       {...cardMotion}
-      className={`flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:grid sm:grid-cols-2 sm:items-center sm:gap-x-4 sm:gap-y-3 sm:px-4 sm:py-3 md:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))_auto_auto] ${isActive ? "border-[#c29e6d] ring-1 ring-[#c29e6d]" : "border-gray-100"}`}
+      className={`grid grid-cols-3 items-center gap-x-2 gap-y-3 rounded-2xl border bg-white p-3 shadow-sm transition-shadow hover:shadow-md sm:grid-cols-2 sm:gap-x-4 sm:gap-y-3 sm:px-4 sm:py-3 md:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))_auto_auto] ${isActive
+        ? "border-[#c29e6d] ring-1 ring-[#c29e6d]"
+        : "border-gray-100"
+        }`}
     >
-      <div className="flex min-w-0 items-start justify-between gap-2 sm:block">
-        <h4 className="text-base font-bold text-[#0f3d20]">{unitLabel(unit, floor)}</h4>
+      {/* Unit title */}
+      <div className="col-span-3 flex min-w-0 items-center justify-between gap-2 sm:col-span-2 md:col-span-1">
+        <h4 className="text-base font-bold text-[#0f3d20]">
+          {unitLabel(unit, floor)}
+        </h4>
+
+        {/* Status on mobile */}
+        <div className="shrink-0 sm:hidden">
+          <StatusBadge status={unit.status} />
+        </div>
       </div>
+
+      {/* Metrics in one horizontal row on mobile */}
       <Metric label="Area" value={formatArea(unit.areaSqFt)} />
-      <Metric label="Down Payment" value={formatMillions(amount)} />
-      <Metric label="Monthly" value={formatMillions(unit.monthlyInstallmentPkr)} />
-      <StatusBadge status={unit.status} className="hidden sm:inline-flex" />
-      <DetailsButton unit={unit} isActive={isActive} onSelect={onSelect} className="w-full px-4 py-2.5 text-xs sm:w-auto sm:py-2" />
+
+      <Metric
+        label="Down Payment"
+        value={formatMillions(amount)}
+      />
+
+      <Metric
+        label="Monthly"
+        value={formatMillions(unit.monthlyInstallmentPkr)}
+      />
+
+      {/* Desktop status */}
+      <div className="hidden lg:flex lg:items-center lg:justify-end">
+        <StatusBadge status={unit.status} />
+      </div>
+
+      {/* Details button */}
+      <div className="col-span-3 sm:col-span-2 md:col-span-1">
+        <DetailsButton
+          unit={unit}
+          isActive={isActive}
+          onSelect={onSelect}
+          className="w-full px-4 py-2.5 text-xs md:w-auto md:py-2"
+        />
+      </div>
     </motion.article>
   );
 }
+
 
 export function MobileFiltersButton({
   onClick,
@@ -239,7 +276,7 @@ export function MobileFiltersDrawer({
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: 12, scale: 0.96 }}
           transition={{ duration: 0.2 }}
-          className="absolute right-[calc(100%+8px)] top-22 z-10 flex w-[min(215px,calc(100vw-125px))] -translate-y-1/2 flex-col items-end gap-2"
+          className="absolute right-[calc(100%+8px)] top-16 z-10 flex w-[min(215px,calc(100vw-125px))] -translate-y-1/2 flex-col items-end gap-2"
           style={{ y: "-50%" }}
         >
           <div className="flex justify-center gap-1">
@@ -261,8 +298,8 @@ export function MobileFiltersDrawer({
                     onStatusFilter(name === "All" ? null : name)
                   }
                   className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 py-2 text-[11px] font-semibold shadow-md transition-colors ${active
-                      ? "border-[#0f3d20] bg-[#0f3d20] text-white"
-                      : "border-[#E8DFD2] bg-white text-[#153D2A]"
+                    ? "border-[#0f3d20] bg-[#0f3d20] text-white"
+                    : "border-[#E8DFD2] bg-white text-[#153D2A]"
                     }`}
                 >
                   {colors && (
@@ -308,8 +345,8 @@ export function MobileFiltersDrawer({
                 onClick={() => onView(id)}
                 aria-pressed={view === id}
                 className={`inline-flex h-9 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold shadow-md ${view === id
-                    ? "border-[#0f3d20] bg-[#0f3d20] text-white"
-                    : "border-[#E8DFD2] bg-white text-[#153D2A]"
+                  ? "border-[#0f3d20] bg-[#0f3d20] text-white"
+                  : "border-[#E8DFD2] bg-white text-[#153D2A]"
                   }`}
               >
                 <Icon className="text-sm" />

@@ -22,6 +22,7 @@ const SORTS = [
   { id: "size-asc", label: "Size: Small to Large", cmp: byField("areaSqFt", 1) },
   { id: "size-desc", label: "Size: Large to Small", cmp: byField("areaSqFt", -1) },
 ];
+
 function FilterChip({ name, active, onClick }) {
   const c = name === "All" ? null : statusColors(name);
   const style = !c
@@ -177,6 +178,8 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   const [view, setView] = useState("grid");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const mobileFilterCount = (statusFilter ? 1 : 0) + (sortId !== "floor" ? 1 : 0) + (view !== "grid" ? 1 : 0);
+  const explorerRef = useRef(null);
+  const [isExplorerVisible, setIsExplorerVisible] = useState(false);
 
   // Floors in building order with their matching, sorted units.
   const groups = useMemo(() => {
@@ -195,6 +198,32 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   const selected = groups.flatMap((g) => g.units.map((u) => ({ floor: g.floor, unit: u }))).find((e) => keyOf(e.floor, e.unit) === selectedKey) ?? null;
   const unit = selected?.unit ?? null;
   const floor = selected?.floor ?? null;
+
+  useEffect(() => {
+    const element = explorerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsExplorerVisible(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isExplorerVisible) {
+      setFiltersOpen(false);
+    }
+  }, [isExplorerVisible]);
 
   useEffect(() => {
     if (!unit || window.matchMedia("(min-width: 1024px)").matches) return;
@@ -229,9 +258,12 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   };
   const Item = view === "grid" ? UnitCard : UnitRow;
   return (
-    <div className="space-y-10 md:space-y-14 lg:space-y-16">
+    <div
+      ref={explorerRef}
+      className="space-y-10 md:space-y-14 lg:space-y-16"
+    >
       <section ref={unitsRef} className="mt-12 md:mt-16 lg:mt-20">
-        <div className="mx-auto mb-8 max-w-2xl text-center">
+        <div className="mx-auto mb-30 md:mb-24 lg:mb-28 max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
             <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
             Explore the Collection
@@ -263,7 +295,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
 
           {/* Floating Mobile Filters */}
           <div className="fixed right-3 top-1/2 z-[999] -translate-y-1/2 lg:hidden">
-            <div className="relative">
+            <div className="relative me-28">
               <MobileFiltersDrawer
                 open={filtersOpen}
                 onClose={() => setFiltersOpen(false)}
@@ -276,13 +308,26 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
                 sorts={SORTS}
               />
 
-              <div className="rounded-full bg-white/95 p-1 shadow-lg">
-                <MobileFiltersButton
-                  open={filtersOpen}
-                  onClick={() => setFiltersOpen((prev) => !prev)}
-                  activeCount={mobileFilterCount}
-                />
-              </div>
+              {/* Floating Mobile Filters */}
+              <AnimatePresence>
+                {isExplorerVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 80, y: "-50%" }}
+                    animate={{ opacity: 1, x: 0, y: "-50%" }}
+                    exit={{ opacity: 0, x: 80, y: "-50%" }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="fixed right-3 top-1/2 z-[999] lg:hidden"
+                  >
+                    <div className="rounded-full bg-white/95 p-1 shadow-lg">
+                      <MobileFiltersButton
+                        open={filtersOpen}
+                        onClick={() => setFiltersOpen((prev) => !prev)}
+                        activeCount={mobileFilterCount}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -354,7 +399,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
         >
           <div className="min-w-0 w-full">
             {groups.length ? (
-              <div className="space-y-10">
+              <div className="space-y-20 lg:space-y-26">
                 {groups.map(({ floor: f, units }) => (
                   <div key={f.id}>
                     <FloorHeading floor={f} units={units} />
