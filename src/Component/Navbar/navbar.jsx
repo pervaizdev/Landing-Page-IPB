@@ -165,7 +165,7 @@ export default function Navbar() {
                   {/* RIGHT: Desktop CTA + Mobile Hamburger */}
                   <div className="flex items-center gap-2">
                     <Link
-                      href="https://islamabad-prime-builder-dashboard.vercel.app"
+                      href="https://client-portal.islamabadprimebuilders.com/"
                       className="hidden rounded-full bg-[#e2ceab] px-6 py-3 text-sm font-bold text-black transition hover:bg-[#d1b38c] md:inline-flex"
                     >
                       Client Portal
@@ -258,7 +258,7 @@ export default function Navbar() {
                     transition={{ delay: NAV_ITEMS.length * 0.05 + 0.1 }}
                   >
                     <Link
-                      href="https://islamabad-prime-builder-dashboard.vercel.app"
+                      href="https://client-portal.islamabadprimebuilders.com/"
                       onClick={closeMenu}
                       className="mt-4 flex items-center justify-center rounded-2xl primary-bg px-4 py-4 text-base font-bold text-gray-900 transition-all hover:shadow-lg hover:shadow-yellow-500/20 active:scale-[0.98]"
                     >
