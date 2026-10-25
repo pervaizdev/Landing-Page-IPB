@@ -143,15 +143,18 @@ export default function UnitCard({ unit, floor, isActive, onSelect }) {
       whileHover={{ y: -3 }}
       className={`flex h-full flex-col rounded-2xl border bg-white p-4 shadow-sm transition-shadow hover:shadow-md ${isActive ? "border-[#c29e6d] ring-1 ring-[#c29e6d]" : "border-gray-100"}`}
     >
-      <div className="flex min-h-14 items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h4 className="text-xl font-bold leading-tight tracking-tight text-[#0f3d20]">{unitLabel(unit, floor)}</h4>
+      <div className="flex min-h-14 flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <h4 className="break-words text-lg font-bold leading-tight tracking-tight text-[#0f3d20]">
+            {unitLabel(unit, floor)}
+          </h4>
         </div>
+
         <StatusBadge status={unit.status} />
       </div>
       <div className="mt-4 rounded-xl bg-[#f7f2ea] p-3.5">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8B5E3C]">Down Payment</p>
-        <p className="mt-1 flex items-baseline gap-2 text-2xl font-extrabold tabular-nums text-[#0f3d20]">
+        <p className="mt-1 flex flex-wrap items-baseline gap-2 text-2xl font-extrabold tabular-nums text-[#0f3d20]">
           {formatMillions(amount)}
           {pct != null && <span className="text-xs font-semibold text-[#8B5E3C]">{pct}%</span>}
         </p>

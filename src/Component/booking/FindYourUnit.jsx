@@ -3,14 +3,15 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
-  HiOutlineBolt,
-  HiOutlineBuildingOffice2,
-  HiOutlineBuildingStorefront,
-  HiOutlineCake,
-  HiOutlineHome,
-  HiOutlineHomeModern,
-  HiOutlineSquares2X2,
-} from "react-icons/hi2";
+  LuLayoutGrid,
+  LuStore,
+  LuUtensilsCrossed,
+  LuDumbbell,
+  LuHouse,
+  LuBedSingle,
+  LuBedDouble,
+  LuBuilding2,
+} from "react-icons/lu";
 import { unitTypeKey } from "./UnitCard";
 
 // Preferred display order; types not listed here follow in data order.
@@ -25,22 +26,22 @@ const TYPE_LABELS = {
 };
 
 const TYPE_ICONS = {
-  shop: HiOutlineBuildingStorefront,
-  restaurant: HiOutlineCake,
-  gym: HiOutlineBolt,
-  office: HiOutlineBuildingOffice2,
-  studio: HiOutlineHome,
+  shop: LuStore,
+  restaurant: LuUtensilsCrossed,
+  gym: LuDumbbell,
+  office: LuBuilding2,
+  studio: LuHouse,
+  "1-bed": LuBedSingle,
+  "2-bed": LuBedDouble,
 };
+function categoryIcon(id) {
+  return TYPE_ICONS[id] ?? LuBuilding2;
+}
 
 export function categoryLabel(id) {
   const bed = id.match(/^(\d+)-bed$/);
   if (bed) return `${bed[1]} ${Number(bed[1]) === 1 ? "Bedroom" : "Bedrooms"}`;
   return TYPE_LABELS[id] ?? id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-function categoryIcon(id) {
-  if (/^\d+-bed$/.test(id)) return HiOutlineHomeModern;
-  return TYPE_ICONS[id] ?? HiOutlineBuildingOffice2;
 }
 
 /** Property types present in a building's inventory, as stable ids. */
@@ -100,7 +101,7 @@ export default function FindYourUnit({ building, selected, onChange }) {
       <p className="mt-4 text-sm text-gray-500 md:text-base">Explore the spaces designed for you.</p>
 
       <div role="group" aria-label="Property types" className="mt-8 flex flex-wrap justify-center gap-3">
-        <CategoryCard label="All Units" Icon={HiOutlineSquares2X2} active={selected.length === 0} onClick={() => onChange([])} />
+        <CategoryCard label="All Units" Icon={LuLayoutGrid} active={selected.length === 0} onClick={() => onChange([])} />
         {typeIds.map((id) => (
           <CategoryCard key={id} label={categoryLabel(id)} Icon={categoryIcon(id)} active={selected.includes(id)} onClick={() => toggle(id)} />
         ))}

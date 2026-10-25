@@ -85,7 +85,7 @@ export default function ProjectPage() {
         />
 
         <motion.div
-          className="mx-auto container gap-6 grid grid-cols-1 lg:grid-cols-2 mt-13 lg:mt-25 pb-30"
+          className="mx-auto container gap-6 grid grid-cols-1 lg:grid-cols-3 mt-13 lg:mt-25 pb-30"
           variants={stagger}
           initial="hidden"
           whileInView="show"

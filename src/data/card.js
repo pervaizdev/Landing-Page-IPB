@@ -110,4 +110,60 @@ export const projects = [
       videos: [{ id: "v1", src: "/videos/P2.webm" }],
     },
   },
+
+   {
+    id: "prime-gold",
+    status: "Comming Soon",
+    availability: "Booking Available",
+    location: "TopCity-1",
+    mapUrl:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1976.3239083764277!2d72.86806109282423!3d33.585388544640914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df99451f7f9ac7%3A0xd5f412e595daa5b9!2sPrime%20Mall!5e0!3m2!1sen!2s!4v1772366366281!5m2!1sen!2s", title: "Prime Mall And Suites",
+    title: "Prime Gold",
+    image: "/images/3b.jpeg",
+
+    projectType: "Residential",
+    floor: "12",
+    shopes: "79",
+    offices: null,
+    studios: "36",
+    bedrooms: "24",
+    restaurant: "3",
+    gym: "2",
+    commencementDate: "1 November, 2026",
+
+    description: [
+      "Prime Gold is a new residential project coming soon, offering a modern and comfortable living experience in Islamabad. It is designed to provide a peaceful and luxurious lifestyle with spacious apartments, thoughtful amenities, and a convenient location. The goal is to create a beautiful home environment where families can relax, grow, and enjoy a high quality of life. We are committed to delivering this project within two years, ensuring it meets the highest standards of quality and satisfaction for our residents.",
+      "With Prime Gold, we are focused on building more than just a property — we are creating a home. From thoughtful design and quality construction to secure facilities and excellent services, every detail will be carefully planned to meet high standards. We are committed to delivering this project within two years, ensuring it stands as a place people can trust, enjoy, and be proud of for years to come.",
+    ],
+
+    keyDetails: [
+      {
+        label: "Location",
+        text: "Plot # 3, K-Block TopCity-1, Islamabad.",
+      },
+      {
+        label: "Number of Floors",
+        text: "8 floors, including the 24 bedrooms, 36 studios , 79 shopes , 3 restaurant , 1 gym and thoughtfully designed for both commercial and residential use.",
+      },
+      {
+        label: "Special Features",
+        text: "Modern architectural design, secure environment, high-speed elevators, and energy-efficient systems.",
+      },
+      {
+        label: "Amenities",
+        text: "Dedicated parking, 24/7 security, gym facility, café spaces, and rooftop area for relaxation and events.",
+      },
+    ],
+
+    media: {
+      photos: [
+        { id: "p1", src: "/images/m1.webp", alt: "Photo 1" },
+        { id: "p2", src: "/images/m2.webp", alt: "Photo 2" },
+        { id: "p3", src: "/images/m3.webp", alt: "Photo 3" },
+        { id: "p4", src: "/images/m4.webp", alt: "Photo 4" },
+        { id: "p5", src: "/images/m5.webp", alt: "Photo 5" },
+      ],
+      videos: [{ id: "v1", src: "/videos/P2.webm" }],
+    },
+  },
 ];

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HiChevronDown, HiOutlineListBullet, HiOutlineSquares2X2, HiXMark } from "react-icons/hi2";
 import UnitCard, { UnitRow, StatusDot, statusColors, unitClass, unitTypeKey, MobileFiltersDrawer, MobileFiltersButton } from "./UnitCard";
 import UnitDetail from "./UnitDetail";
-import { categoryLabel } from "./FindYourUnit";
+import { categoryLabel, getBuildingTypeIds } from "./FindYourUnit";
 
 const byNumber = (a, b) => String(a.number).localeCompare(String(b.number), undefined, { numeric: true });
 // Missing values sort last in either direction.
@@ -16,7 +16,7 @@ const byField = (field, dir) => (a, b) => {
   return (x - y) * dir;
 };
 const SORTS = [
-  { id: "floor", label: "Floor Order", cmp: byNumber },
+  { id: "floor", label: "Unit Order", cmp: byNumber },
   { id: "price-asc", label: "Price: Low to High", cmp: byField("pricePkr", 1) },
   { id: "price-desc", label: "Price: High to Low", cmp: byField("pricePkr", -1) },
   { id: "size-asc", label: "Size: Small to Large", cmp: byField("areaSqFt", 1) },
@@ -111,16 +111,16 @@ function CustomSortDropdown({ sortId, onSortId, sorts }) {
   }, [open]);
 
   return (
-    <div ref={dropdownRef} className="relative w-full min-w-[10.5rem]">
+    <div ref={dropdownRef} className="relative w-full ">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-[#d1b38c] bg-white px-4 py-2.5 text-left text-sm font-semibold text-[#0f3d20] shadow-sm transition-colors hover:border-[#c29e6d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]/40"
+        className="flex h-11 w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-[#d1b38c] bg-white px-4 py-2.5 text-left text-sm font-semibold text-[#0f3d20] shadow-sm transition-colors hover:border-[#c29e6d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]/40"
       >
-        <span>
-          {sorts.find((s) => s.id === sortId)?.label ?? "Floor Order"}
+        <span className="whitespace-nowrap">
+          {sorts.find((s) => s.id === sortId)?.label ?? "Unit Order"}
         </span>
 
         <HiChevronDown
@@ -169,12 +169,203 @@ function CustomSortDropdown({ sortId, onSortId, sorts }) {
   );
 }
 
+
+function CustomFloorDropdown({ floors, selectedFloorId, onFloorChange }) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleOutside = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handleOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
+  const selectedFloor = floors.find(
+    (floor) => String(floor.id) === String(selectedFloorId)
+  );
+
+  const options = [
+    { id: null, name: "All Floors" },
+    ...floors,
+  ];
+
+  return (
+    <div ref={dropdownRef} className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-[#d1b38c] bg-white px-4 py-2.5 text-left text-sm font-semibold text-[#0f3d20] shadow-sm transition-colors hover:border-[#c29e6d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]/40"
+      >
+        <span className="whitespace-nowrap">
+          {selectedFloor?.name ?? "All Floors"}
+        </span>
+        <HiChevronDown
+          className={`shrink-0 text-lg text-[#8B5E3C] transition-transform duration-200 ${open ? "rotate-180" : ""
+            }`}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="listbox"
+            aria-label="Select floor"
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+            className="absolute left-0 right-0 top-full z-[1000] mt-2 max-h-64 overflow-y-auto rounded-xl border border-[#E8DFD2] bg-white p-1.5 shadow-xl"
+          >
+            {options.map((floor) => {
+              const active =
+                floor.id === null
+                  ? selectedFloorId === null
+                  : String(selectedFloorId) === String(floor.id);
+
+              return (
+                <button
+                  key={floor.id ?? "all"}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => {
+                    onFloorChange(floor.id);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full cursor-pointer items-center rounded-lg px-3 py-3 text-left text-xs font-semibold transition-colors ${active
+                    ? "bg-[#0f3d20] text-white"
+                    : "text-[#153D2A] hover:bg-[#F7F2EA]"
+                    }`}
+                >
+                  {floor.name}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+
+function FloorUnitListing({
+  floor,
+  units,
+  view,
+  selectedKey,
+  keyOf,
+  onSelectUnit,
+  Item,
+}) {
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  // Restart at 7 when this floor's filter or sort results change.
+  const unitKeys = units.map((u) => u.id).join("|");
+
+  useEffect(() => {
+    setVisibleCount(8);
+  }, [unitKeys, view]);
+
+  const visibleUnits = units.slice(0, visibleCount);
+  const hasMore = visibleCount < units.length;
+
+  const showMore = () => {
+    setVisibleCount((prev) => Math.min(prev + 5, units.length));
+  };
+
+  const showAll = () => {
+    setVisibleCount(units.length);
+  };
+
+  return (
+    <div>
+      <FloorHeading floor={floor} units={units} />
+
+      <div
+        className={
+          view === "grid"
+            ? selectedKey
+              ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4"
+              : "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
+            : "flex flex-col gap-3"
+        }
+      >
+        <AnimatePresence initial={false}>
+          {visibleUnits.map((u) => {
+            const key = keyOf(floor, u);
+
+            return (
+              <div key={key} data-unit-key={key} className="min-w-0">
+                <Item
+                  unit={u}
+                  floor={floor}
+                  isActive={key === selectedKey}
+                  onSelect={() => onSelectUnit(key)}
+                />
+              </div>
+            );
+          })}
+        </AnimatePresence>
+
+        {hasMore && (
+          <div
+            className={
+              view === "grid"
+                ? selectedKey
+                  ? "flex flex-wrap items-center justify-start gap-3 self-center sm:col-span-2 lg:col-span-1 2xl:col-span-2 lg:pl-3"
+                  : "flex flex-wrap items-center justify-start gap-3 self-center sm:col-span-2 lg:col-span-2 lg:pl-4"
+                : "flex flex-wrap items-center justify-start gap-3"
+            }
+          >
+            <button
+              type="button"
+              onClick={showMore}
+              className="inline-flex h-10 cursor-pointer items-center justify-center whitespace-nowrap rounded-xl border border-[#c29e6d] bg-white px-5 text-sm font-semibold text-[#0f3d20] transition-colors hover:bg-[#f7f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]"
+            >
+              See More
+            </button>
+
+            <button
+              type="button"
+              onClick={showAll}
+              className="inline-flex h-10 cursor-pointer items-center justify-center whitespace-nowrap rounded-xl bg-[#0f3d20] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#16562f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]"
+            >
+              See All
+            </button>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
 export default function FloorExplorer({ building, selectedTypes = [], onTypesChange }) {
   const unitsRef = useRef(null);
   const floors = Array.isArray(building?.floors) ? building.floors : [];
   const [selectedKey, setSelectedKey] = useState(null); // `${buildingId}:${floorId}:${unitId}`
   const [statusFilter, setStatusFilter] = useState(null);
   const [sortId, setSortId] = useState("floor");
+  const [selectedFloorId, setSelectedFloorId] = useState(null);
   const [view, setView] = useState("grid");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const mobileFilterCount = (statusFilter ? 1 : 0) + (sortId !== "floor" ? 1 : 0) + (view !== "grid" ? 1 : 0);
@@ -182,42 +373,66 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   const [isExplorerVisible, setIsExplorerVisible] = useState(false);
 
   // Floors in building order with their matching, sorted units.
+
   const groups = useMemo(() => {
     const cmp = SORTS.find((s) => s.id === sortId)?.cmp ?? byNumber;
+
     return (building?.floors ?? [])
+      .filter(
+        (floor) =>
+          selectedFloorId === null ||
+          String(floor.id) === String(selectedFloorId)
+      )
       .map((floor) => ({
         floor,
         units: (floor.units ?? [])
-          .filter((u) => !selectedTypes.length || selectedTypes.includes(unitTypeKey(u)))
-          .filter((u) => !statusFilter || u.status === statusFilter)
+          .filter(
+            (u) =>
+              !selectedTypes.length ||
+              selectedTypes.includes(unitTypeKey(u))
+          )
+          .filter(
+            (u) => !statusFilter || u.status === statusFilter
+          )
           .sort(cmp),
       }))
       .filter((g) => g.units.length);
-  }, [building, selectedTypes, statusFilter, sortId]);
+  }, [building, selectedTypes, statusFilter, sortId, selectedFloorId]);
+
   const keyOf = (f, u) => `${building.id}:${f.id}:${u.id}`;
   const selected = groups.flatMap((g) => g.units.map((u) => ({ floor: g.floor, unit: u }))).find((e) => keyOf(e.floor, e.unit) === selectedKey) ?? null;
   const unit = selected?.unit ?? null;
   const floor = selected?.floor ?? null;
 
+
   useEffect(() => {
-    const element = explorerRef.current;
-    if (!element) return;
+    const updateVisibility = () => {
+      const element = unitsRef.current;
+      if (!element) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsExplorerVisible(entry.isIntersecting);
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0,
-      }
-    );
+      const rect = element.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
 
-    observer.observe(element);
+      setIsExplorerVisible(
+        rect.top <= viewportCenter &&
+        rect.bottom >= viewportCenter
+      );
+    };
 
-    return () => observer.disconnect();
+    window.addEventListener("scroll", updateVisibility, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", updateVisibility);
+
+    updateVisibility();
+
+    return () => {
+      window.removeEventListener("scroll", updateVisibility);
+      window.removeEventListener("resize", updateVisibility);
+    };
   }, []);
+
 
   useEffect(() => {
     if (!isExplorerVisible) {
@@ -250,12 +465,36 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
       </div>
     );
   }
+
   const onSelectUnit = (key) => {
+    const clickedCard = document.querySelector(
+      `[data-unit-key="${CSS.escape(key)}"]`
+    );
+
+    const previousTop = clickedCard?.getBoundingClientRect().top ?? null;
+
     setSelectedKey(key);
-    if (window.matchMedia("(min-width: 1024px)").matches) {
-      requestAnimationFrame(() => unitsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+
+    if (previousTop !== null) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const updatedCard = document.querySelector(
+            `[data-unit-key="${CSS.escape(key)}"]`
+          );
+
+          if (!updatedCard) return;
+
+          const newTop = updatedCard.getBoundingClientRect().top;
+
+          window.scrollBy({
+            top: newTop - previousTop,
+            behavior: "instant",
+          });
+        });
+      });
     }
   };
+
   const Item = view === "grid" ? UnitCard : UnitRow;
   return (
     <div
@@ -291,7 +530,6 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
               ))}
             </div>
           )}
-          {/* Floating Mobile Filters Button */}
 
           {/* Floating Mobile Filters */}
           <div className="fixed right-3 top-1/2 z-[999] -translate-y-1/2 lg:hidden">
@@ -353,29 +591,53 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <div className="relative">
+
+          <div className="flex w-full flex-row flex-nowrap items-center justify-end gap-2 lg:w-auto">
+            {/* Floor dropdown */}
+            <div className="w-[210px] shrink-0">
+              <CustomFloorDropdown
+                floors={floors}
+                selectedFloorId={selectedFloorId}
+                onFloorChange={setSelectedFloorId}
+              />
+            </div>
+
+            {/* Unit sort dropdown */}
+            <div className="w-[210px] shrink-0">
               <CustomSortDropdown
                 sortId={sortId}
                 onSortId={setSortId}
                 sorts={SORTS}
               />
             </div>
-            <div role="group" aria-label="Layout" className="flex overflow-hidden rounded-xl border border-gray-200 bg-white">
-              {[["grid", HiOutlineSquares2X2, "Grid view"], ["list", HiOutlineListBullet, "List view"]].map(([id, Icon, label]) => (
+
+            {/* Grid / List toggle */}
+            <div
+              role="group"
+              aria-label="Layout"
+              className="flex shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white"
+            >
+              {[
+                ["grid", HiOutlineSquares2X2, "Grid view"],
+                ["list", HiOutlineListBullet, "List view"],
+              ].map(([id, Icon, label]) => (
                 <button
                   key={id}
                   type="button"
                   onClick={() => setView(id)}
                   aria-pressed={view === id}
                   aria-label={label}
-                  className={`grid h-10 w-10 cursor-pointer place-items-center text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#c29e6d] motion-reduce:transition-none ${view === id ? "bg-[#0f3d20] text-white" : "text-gray-500 hover:text-[#0f3d20]"}`}
+                  className={`grid h-10 w-10 cursor-pointer place-items-center text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#c29e6d] ${view === id
+                    ? "bg-[#0f3d20] text-white"
+                    : "text-gray-500 hover:text-[#0f3d20]"
+                    }`}
                 >
                   <Icon aria-hidden="true" />
                 </button>
               ))}
             </div>
           </div>
+
         </div>
 
         <MobileFiltersDrawer
@@ -389,29 +651,30 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
           onView={setView}
           sorts={SORTS}
         />
+
         {/* Unit listing and detail sidebar */}
         <div
           className={
             unit
-              ? "lg:grid lg:grid-cols-[minmax(0,1fr)_min(30%,22rem)] lg:items-start lg:gap-6"
+              ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,28%)] lg:items-stretch lg:gap-6"
               : ""
           }
         >
+          {/* Left side: Unit cards */}
           <div className="min-w-0 w-full">
             {groups.length ? (
               <div className="space-y-20 lg:space-y-26">
                 {groups.map(({ floor: f, units }) => (
-                  <div key={f.id}>
-                    <FloorHeading floor={f} units={units} />
-                    <div className={view === "grid" ? "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(250px,1fr))]" : "flex flex-col gap-3"}>
-                      <AnimatePresence>
-                        {units.map((u) => {
-                          const key = keyOf(f, u);
-                          return <Item key={key} unit={u} floor={f} isActive={key === selectedKey} onSelect={() => onSelectUnit(key)} />;
-                        })}
-                      </AnimatePresence>
-                    </div>
-                  </div>
+                  <FloorUnitListing
+                    key={f.id}
+                    floor={f}
+                    units={units}
+                    view={view}
+                    selectedKey={selectedKey}
+                    keyOf={keyOf}
+                    onSelectUnit={onSelectUnit}
+                    Item={Item}
+                  />
                 ))}
               </div>
             ) : (
@@ -420,9 +683,14 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
               </div>
             )}
           </div>
+
+          {/* Right side: Sticky Unit Detail */}
           {unit && (
-            <aside aria-label="Unit details" className="hidden min-w-0 lg:block lg:self-stretch">
-              <div className="sticky top-3 z-10 max-h-[calc(100dvh-1.5rem)] min-h-0">
+            <aside
+              aria-label="Unit details"
+              className="hidden min-w-0 lg:block"
+            >
+              <div className="sticky top-3 flex h-[calc(100dvh-1.5rem)] items-center justify-center">
                 <UnitDetail
                   layout="sidebar"
                   building={building}
@@ -434,6 +702,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
             </aside>
           )}
         </div>
+
       </section>
       {typeof document !== "undefined" &&
         createPortal(
