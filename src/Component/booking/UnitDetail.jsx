@@ -16,6 +16,28 @@ import {
 } from "./UnitCard";
 
 const hasNumber = (value) => value != null && value !== "" && Number.isFinite(Number(value));
+const formatMillionBillion = (value) => {
+  const num = Number(value);
+
+  if (!Number.isFinite(num)) return "—";
+
+  const format = (amount) =>
+    parseFloat(amount.toFixed(2)).toLocaleString("en-US");
+
+  if (Math.abs(num) >= 1_000_000_000) {
+    return `${format(num / 1_000_000_000)} B`;
+  }
+
+  if (Math.abs(num) >= 1_000_000) {
+    return `${format(num / 1_000_000)} M`;
+  }
+
+  if (Math.abs(num) >= 1_000) {
+    return `${format(num / 1_000)} K`;
+  }
+
+  return format(num);
+};
 const propertyType = (unit) => [unitClass(unit), unitTypeShort(unit)].filter(Boolean).join(" ");
 
 function DetailRow({ label, value, prominent = false }) {
@@ -69,9 +91,9 @@ export default function UnitDetail({ building, floor, unit, onClose, layout = "m
       role={isSidebar ? "region" : "dialog"}
       aria-label={`${title} details`}
       data-lenis-prevent
-      initial={{ opacity: 0, y: isSidebar ? 0 : 10 }}
+      initial={{ opacity: 0, y: isSidebar ? 12 : 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: isSidebar ? 0.7 : 0.55, ease: [0.16, 1, 0.3, 1] }}
       className={`flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#E8DFD2] bg-white shadow-sm ${isSidebar ? "max-h-[calc(100dvh-1.5rem)]" : ""}`}
     >
       <div className={`flex min-h-0 flex-1 flex-col ${isSidebar ? "p-3" : "p-4 sm:p-5"}`}>
@@ -101,11 +123,11 @@ export default function UnitDetail({ building, floor, unit, onClose, layout = "m
         </div>
         <div className={`min-h-0 flex-1 overscroll-contain ${isSidebar ? "overflow-y-auto pr-1 [scrollbar-width:thin]" : ""}`} data-lenis-prevent>
         <div className="pt-2">
-          {hasNumber(unit.pricePkr) && <DetailRow label="Total price" value={`PKR ${formatPKR(unit.pricePkr)}`} prominent />}
-          <DetailRow label="Property type" value={propertyType(unit) || "—"} />
+          {hasNumber(unit.pricePkr) && <DetailRow label="Total Price" value={`${formatMillionBillion(unit.pricePkr)}`} prominent />}
+          <DetailRow label="Property Type" value={propertyType(unit) || "—"} />
           <DetailRow label="Floor" value={floor.name} />
           {hasNumber(unit.areaSqFt) && <DetailRow label="Area" value={formatArea(unit.areaSqFt)} />}
-          {hasNumber(unit.pricePerSqFt) && <DetailRow label="Price per sq.ft" value={`PKR ${formatPKR(unit.pricePerSqFt)}`} />}
+          {hasNumber(unit.pricePerSqFt) && <DetailRow label="Price Per Sq Ft" value={`${formatMillionBillion(unit.pricePerSqFt)}`} />}
           {unit.facing && <DetailRow label="Facing" value={unit.facing} />}
           {unit.position && <DetailRow label="Position" value={unit.position} />}
           {unit.features?.length > 0 && (
@@ -118,16 +140,16 @@ export default function UnitDetail({ building, floor, unit, onClose, layout = "m
             <h4 className="border-b border-gray-200 pb-1.5 text-base font-bold text-[#153D2A]">Payment details</h4>
             {hasDown && (
               <DetailRow
-                label={downPct ? `Initial payment (${downPct})` : "Initial payment"}
-                value={`PKR ${formatPKR(unit.bookingAmountPkr)}`}
+                label={downPct ? `Initial Down Payment (${downPct})` : "Initial Down Payment"}
+                value={`${formatMillionBillion(unit.bookingAmountPkr)}`}
               />
             )}
-            {hasMonthly && <DetailRow label="Monthly payment" value={`PKR ${formatPKR(unit.monthlyInstallmentPkr)}`} />}
-            {months > 0 && <DetailRow label="Payment period" value={`${months} months`} />}
-            {installmentsTotal != null && <DetailRow label="Total monthly payments" value={`PKR ${formatPKR(installmentsTotal)}`} />}
+            {hasMonthly && <DetailRow label="Monthly Installment" value={`${formatMillionBillion(unit.monthlyInstallmentPkr)}`} />}
+            {months > 0 && <DetailRow label="Payment Period" value={`${months} months`} />}
+            {installmentsTotal != null && <DetailRow label="Total Monthly Installments" value={`${formatMillionBillion(installmentsTotal)}`} />}
             {discrepancy && (
               <p className="mt-2 text-xs leading-relaxed text-[#946b39]">
-                Note: the initial payment plus monthly payments ({formatPKR(paidSum)} PKR) differs from the listed total price ({formatPKR(unit.pricePkr)} PKR).
+                Note: the initial down payment plus total monthly installments ({formatMillionBillion(paidSum)} PKR) differs from the listed total price ({formatMillionBillion(unit.pricePkr)} PKR).
               </p>
             )}
           </section>

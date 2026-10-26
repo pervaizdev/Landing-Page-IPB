@@ -29,17 +29,20 @@ function FilterChip({ name, active, onClick }) {
     ? undefined
     : { backgroundColor: c.bg, color: c.text, borderColor: active ? c.dot : `${c.text}30`, boxShadow: active ? `0 0 0 2px ${c.dot}33` : undefined };
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
       aria-pressed={active}
       style={style}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 240, damping: 20 }}
       className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d] ${c ? "" : active ? "border-[#153D29] bg-[#153D29] text-white" : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
         }`}
     >
       {c && <StatusDot status={name} />}
       {name}
-    </button>
+    </motion.button>
   );
 }
 function floorDescription(units) {
@@ -53,10 +56,22 @@ function FloorHeading({ floor, units }) {
   const available = units.filter((u) => u.status === "Available").length;
   const booked = units.filter((u) => u.status === "Booked").length;
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-b border-gray-200 pb-5">
+    <motion.div
+      className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-b border-gray-200 pb-5"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className="w-full text-center md:w-auto md:text-left">
         <h3 className="parisienne-font text-3xl font-normal leading-tight text-[#153D2A] md:text-[40px]">{floor.name}</h3>
-        <div className="mx-auto mt-2 h-[2px] w-20 bg-[#c29e6d] md:mx-0 md:w-24" />
+        <motion.div
+          className="mx-auto mt-2 h-[2px] w-20 origin-center bg-[#c29e6d] md:mx-0 md:origin-left md:w-24"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        />
         <p className="mt-2 text-base text-[#87918B] md:text-[17px]">{floorDescription(units)}</p>
       </div>
       <div className="w-full text-center md:ml-auto md:w-auto md:text-right">
@@ -79,7 +94,7 @@ function FloorHeading({ floor, units }) {
           )}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -134,10 +149,10 @@ function CustomSortDropdown({ sortId, onSortId, sorts }) {
           <motion.div
             role="listbox"
             aria-label="Sort units"
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="absolute left-0 right-0 top-full z-[1000] mt-2 overflow-hidden rounded-xl border border-[#E8DFD2] bg-white p-1.5 shadow-xl"
           >
             {sorts.map((sort) => {
@@ -228,10 +243,10 @@ function CustomFloorDropdown({ floors, selectedFloorId, onFloorChange }) {
           <motion.div
             role="listbox"
             aria-label="Select floor"
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="absolute left-0 right-0 top-full z-[1000] mt-2 max-h-64 overflow-y-auto rounded-xl border border-[#E8DFD2] bg-white p-1.5 shadow-xl"
           >
             {options.map((floor) => {
@@ -310,7 +325,7 @@ function FloorUnitListing({
         }
       >
         <AnimatePresence initial={false}>
-          {visibleUnits.map((u) => {
+          {visibleUnits.map((u, index) => {
             const key = keyOf(floor, u);
 
             return (
@@ -318,6 +333,7 @@ function FloorUnitListing({
                 <Item
                   unit={u}
                   floor={floor}
+                  index={index}
                   isActive={key === selectedKey}
                   onSelect={() => onSelectUnit(key)}
                 />
@@ -327,7 +343,11 @@ function FloorUnitListing({
         </AnimatePresence>
 
         {hasMore && (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className={
               view === "grid"
                 ? selectedKey
@@ -351,7 +371,7 @@ function FloorUnitListing({
             >
               See All
             </button>
-          </div>
+          </motion.div>
         )}
 
       </div>
@@ -368,7 +388,8 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   const [selectedFloorId, setSelectedFloorId] = useState(null);
   const [view, setView] = useState("grid");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const mobileFilterCount = (statusFilter ? 1 : 0) + (sortId !== "floor" ? 1 : 0) + (view !== "grid" ? 1 : 0);
+  const mobileFilterCount = (statusFilter ? 1 : 0) + (sortId !== "floor" ? 1 : 0) + (view !== "grid" ? 1 : 0) + (selectedFloorId !== null ? 1 : 0) +
+    selectedTypes.length;
   const explorerRef = useRef(null);
   const [isExplorerVisible, setIsExplorerVisible] = useState(false);
 
@@ -452,7 +473,13 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
   // Some projects do not yet have published floor inventory.
   if (!floors.length) {
     return (
-      <div className="mt-10 rounded-[26px] border border-[#d1b38c]/40 bg-white px-6 py-14 text-center shadow-lg shadow-black/5 lg:mt-16">
+      <motion.div
+        className="mt-10 rounded-[26px] border border-[#d1b38c]/40 bg-white px-6 py-14 text-center shadow-lg shadow-black/5 lg:mt-16"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      >
         <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C]">
           Floor Plan
         </span>
@@ -462,7 +489,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-gray-500">
           Floor plans and unit availability for {building?.name ?? "this project"} are not available yet.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -501,35 +528,46 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
       ref={explorerRef}
       className="space-y-10 md:space-y-14 lg:space-y-16"
     >
-      <section ref={unitsRef} className="mt-12 md:mt-16 lg:mt-20">
+      <section ref={unitsRef} className="mt-[130px] lg:mt-[160px]">
         <div className="mx-auto mb-30 md:mb-24 lg:mb-28 max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
+          <motion.span
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs"
+          >
             <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
             Explore the Collection
-          </span>
-          <h2 className="mt-3 text-3xl md:text-4xl lg:text-5xl parisienne-font text-[#0f3d20]">Explore Our Units</h2>
-          <div className="mx-auto mt-3 h-[2px] w-20 origin-center bg-linear-to-r from-transparent via-[#c29e6d] to-transparent" />
-          <p className="mt-3 text-xs md:text-sm text-gray-500 max-w-md mx-auto">Find your ideal property, floor by floor.</p>
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.1, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-3 text-3xl md:text-4xl lg:text-5xl parisienne-font text-[#0f3d20]"
+          >
+            Explore Our Units
+          </motion.h2>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.0, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="mx-auto mt-3 h-[2px] w-20 origin-center bg-linear-to-r from-transparent via-[#c29e6d] to-transparent"
+          />
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.0, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-3 text-xs md:text-sm text-gray-500 max-w-md mx-auto"
+          >
+            Find your ideal property, floor by floor.
+          </motion.p>
         </div>
         {/* Mobile toolbar */}
         <div className="mb-6 lg:hidden">
-          {selectedTypes.length > 0 && (
-            <div className="mb-3 flex flex-wrap justify-center gap-2">
-              {selectedTypes.map((id) => (
-                <span key={id} className="inline-flex items-center gap-1 rounded-full border border-[#c29e6d]/60 bg-white py-1 pl-3 pr-1.5 text-xs font-semibold text-[#8B5E3C]">
-                  {categoryLabel(id)}
-                  <button
-                    type="button"
-                    onClick={() => onTypesChange?.(selectedTypes.filter((t) => t !== id))}
-                    aria-label={`Remove ${categoryLabel(id)} filter`}
-                    className="grid h-4 w-4 cursor-pointer place-items-center rounded-full transition-colors hover:bg-[#c29e6d]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]"
-                  >
-                    <HiXMark className="text-xs" aria-hidden="true" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
 
           {/* Floating Mobile Filters */}
           <div className="fixed right-3 top-1/2 z-[999] -translate-y-1/2 lg:hidden">
@@ -544,6 +582,11 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
                 view={view}
                 onView={setView}
                 sorts={SORTS}
+                floors={floors}
+                selectedFloorId={selectedFloorId}
+                onFloorChange={setSelectedFloorId}
+                selectedTypes={selectedTypes}
+                onTypesChange={onTypesChange}
               />
 
               {/* Floating Mobile Filters */}
@@ -553,7 +596,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
                     initial={{ opacity: 0, x: 80, y: "-50%" }}
                     animate={{ opacity: 1, x: 0, y: "-50%" }}
                     exit={{ opacity: 0, x: 80, y: "-50%" }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                     className="fixed right-3 top-1/2 z-[999] lg:hidden"
                   >
                     <div className="rounded-full bg-white/95 p-1 shadow-lg">
@@ -572,7 +615,13 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
         </div>
 
         {/* Desktop toolbar */}
-        <div className="mb-6 hidden flex-col items-stretch gap-4 lg:flex lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-3">
+        <motion.div
+          className="mb-6 hidden flex-col items-stretch gap-4 lg:flex lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className="flex flex-wrap items-center justify-start gap-2">
             <FilterChip name="All" active={!statusFilter} onClick={() => setStatusFilter(null)} />
             <FilterChip name="Available" active={statusFilter === "Available"} onClick={() => setStatusFilter(statusFilter === "Available" ? null : "Available")} />
@@ -638,7 +687,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
             </div>
           </div>
 
-        </div>
+        </motion.div>
 
         <MobileFiltersDrawer
           open={filtersOpen}
@@ -656,7 +705,7 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
         <div
           className={
             unit
-              ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,28%)] lg:items-stretch lg:gap-6"
+              ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(300px,24%)] lg:items-stretch lg:gap-4"
               : ""
           }
         >
@@ -678,9 +727,14 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
                 ))}
               </div>
             ) : (
-              <div className="rounded-3xl border border-dashed border-gray-300 p-10 text-center text-sm text-gray-500">
+              <motion.div
+                className="rounded-3xl border border-dashed border-gray-300 p-10 text-center text-sm text-gray-500"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
                 No units match these filters.
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -713,15 +767,16 @@ export default function FloorExplorer({ building, selectedTypes = [], onTypesCha
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => setSelectedKey(null)}
               >
                 <motion.div
                   data-lenis-prevent
                   className="max-h-[min(92dvh,720px)] w-full max-w-xl overflow-y-auto rounded-t-3xl sm:rounded-3xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-[env(safe-area-inset-bottom)]"
-                  initial={{ y: 24 }}
+                  initial={{ y: 36 }}
                   animate={{ y: 0 }}
-                  exit={{ y: 24 }}
-                  transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                  exit={{ y: 28 }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <UnitDetail

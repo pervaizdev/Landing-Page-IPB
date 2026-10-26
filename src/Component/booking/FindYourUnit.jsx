@@ -52,20 +52,38 @@ export function getBuildingTypeIds(building) {
   return [...ids].sort((a, b) => rank(a) - rank(b));
 }
 
+const typeContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.18 } },
+};
+
+const typeFade = {
+  hidden: { opacity: 0, y: 28 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 function CategoryCard({ label, Icon, active, onClick }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`flex h-24 w-[calc((100%-0.75rem)/2)] cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border px-2 text-center transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d] sm:w-[calc((100%-1.5rem)/3)] lg:w-[calc((100%-3rem)/5)] ${active
-          ? "border-[#c29e6d] bg-[#c29e6d]/10 shadow-sm"
-          : "border-gray-200 bg-white hover:border-[#d1b38c]"
+      variants={typeFade}
+      whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 220, damping: 18 }}
+      className={`flex h-24 w-[calc((100%-0.75rem)/2)] cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border px-2 text-center transition-all duration-500 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d] sm:w-[calc((100%-1.5rem)/3)] lg:w-[calc((100%-3rem)/5)] ${active
+        ? "border-[#c29e6d] bg-[#c29e6d]/10 shadow-sm"
+        : "border-gray-200 bg-white hover:border-[#d1b38c]"
         }`}
     >
       <Icon className={`text-2xl transition-colors ${active ? "text-[#8B5E3C]" : "text-[#c29e6d]"}`} aria-hidden="true" />
       <span className={`text-xs font-semibold md:text-sm ${active ? "text-[#0f3d20]" : "text-gray-700"}`}>{label}</span>
-    </button>
+    </motion.button>
   );
 }
 
@@ -82,30 +100,58 @@ export default function FindYourUnit({ building, selected, onChange }) {
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-1 pt-4 text-center md:px-0" aria-labelledby="find-your-unit-heading">
-      <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
-        {building.name}
-      </span>
-      <motion.h2
-        id="find-your-unit-heading"
-        initial={{ opacity: 0, y: 20 }}
+    <section className="mx-auto max-w-5xl px-1 mt-[140px] text-center md:px-0" aria-labelledby="find-your-unit-heading">
+      <motion.span
+        initial={{ opacity: 0, y: 18 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
+        {building.name}
+      </motion.span>
+      <motion.h2
+        id="find-your-unit-heading"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1.1, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="mt-3 text-4xl parisienne-font text-[#0f3d20] lg:text-5xl"
       >
         Choose Your Unit
       </motion.h2>
-      <div className="mx-auto mt-4 h-[2px] w-20 bg-linear-to-r from-transparent via-[#c29e6d] to-transparent" />
-      <p className="mt-4 text-sm text-gray-500 md:text-base">Explore the spaces designed for you.</p>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1.0, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        className="mx-auto mt-4 h-[2px] w-20 origin-center bg-linear-to-r from-transparent via-[#c29e6d] to-transparent"
+      />
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1.0, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+        className="mt-4 text-sm text-gray-500 md:text-base"
+      >
+        Explore the spaces designed for you.
+      </motion.p>
 
-      <div role="group" aria-label="Property types" className="mt-8 flex flex-wrap justify-center gap-3">
+      <motion.div
+        role="group"
+        aria-label="Property types"
+        className="mt-8 flex flex-wrap justify-center gap-3"
+        variants={typeContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.15 }}
+      >
         <CategoryCard label="All Units" Icon={LuLayoutGrid} active={selected.length === 0} onClick={() => onChange([])} />
         {typeIds.map((id) => (
           <CategoryCard key={id} label={categoryLabel(id)} Icon={categoryIcon(id)} active={selected.includes(id)} onClick={() => toggle(id)} />
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

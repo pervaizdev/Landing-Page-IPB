@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   HiArrowUpRight,
@@ -10,6 +10,7 @@ import {
   HiXMark,
 } from "react-icons/hi2";
 import bookingData from "@/data/booking.json";
+import { categoryLabel } from "./FindYourUnit";
 
 const bookingConfig = bookingData.config;
 export const statusStyle = (status) => statusStyles?.[status] ?? fallbackStatusStyle ?? {};
@@ -48,6 +49,9 @@ export function formatCompactPKR(value) {
   const trim = (n) => n.toFixed(2).replace(/\.?0+$/, "");
   if (amount >= 1_000_000_000) return `${trim(amount / 1_000_000_000)} B`;
   if (amount >= 1_000_000) return `${trim(amount / 1_000_000)} M`;
+  if (amount >= 1_000) {
+    return `${trim(amount / 1_000)} K`;
+  }
   return formatPKR(amount);
 }
 // Display-only: 429722 -> "0.43 M", 1250000000 -> "1.25 B". Never alters the stored value.
@@ -117,35 +121,39 @@ function Metric({ label, value }) {
 }
 function DetailsButton({ unit, isActive, onSelect, className = "" }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onSelect}
       aria-pressed={isActive}
       aria-label={`View details for unit ${unit.number}`}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 240, damping: 20 }}
       className={`group/btn inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#0f3d20] font-semibold text-white transition-colors hover:bg-[#16562f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d] focus-visible:ring-offset-2 ${className}`}
     >
       View Details
-      <HiArrowUpRight className="text-sm transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" aria-hidden="true" />
-    </button>
+      <HiArrowUpRight className="text-sm transition-transform duration-300 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" aria-hidden="true" />
+    </motion.button>
   );
 }
-const cardMotion = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.97 },
-  transition: { duration: 0.22 },
-};
-export default function UnitCard({ unit, floor, isActive, onSelect }) {
+export default function UnitCard({ unit, floor, isActive, onSelect, index = 0 }) {
   const { amount, pct } = downPayment(unit);
   return (
     <motion.article
-      {...cardMotion}
-      whileHover={{ y: -3 }}
-      className={`flex h-full flex-col rounded-2xl border bg-white p-4 shadow-sm transition-shadow hover:shadow-md ${isActive ? "border-[#c29e6d] ring-1 ring-[#c29e6d]" : "border-gray-100"}`}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.95, delay: (index % 8) * 0.1, ease: [0.22, 1, 0.36, 1] },
+      }}
+      viewport={{ once: true, amount: 0.18 }}
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      className={`flex h-full flex-col rounded-2xl border bg-white p-4 shadow-sm transition-shadow duration-500 hover:shadow-md ${isActive ? "border-[#c29e6d] ring-1 ring-[#c29e6d]" : "border-gray-100"}`}
     >
       <div className="flex min-h-14 flex-wrap items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <h4 className="break-words text-lg font-bold leading-tight tracking-tight text-[#0f3d20]">
+          <h4 className="break-words text-md font-bold leading-tight tracking-tight text-[#0f3d20]">
             {unitLabel(unit, floor)}
           </h4>
         </div>
@@ -161,20 +169,28 @@ export default function UnitCard({ unit, floor, isActive, onSelect }) {
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3">
         <Metric label="Area" value={formatArea(unit.areaSqFt)} />
-        <Metric label="Monthly" value={formatMillions(unit.monthlyInstallmentPkr)} />
+        <Metric label="Monthly" value={formatCompactPKR(unit.monthlyInstallmentPkr)} />
       </div>
       <DetailsButton unit={unit} isActive={isActive} onSelect={onSelect} className="mt-5 w-full px-4 py-2.5 text-sm" />
     </motion.article>
   );
 }
 
-export function UnitRow({ unit, floor, isActive, onSelect }) {
+export function UnitRow({ unit, floor, isActive, onSelect, index = 0 }) {
   const { amount } = downPayment(unit);
 
   return (
     <motion.article
-      {...cardMotion}
-      className={`grid grid-cols-3 items-center gap-x-2 gap-y-3 rounded-2xl border bg-white p-3 shadow-sm transition-shadow hover:shadow-md sm:grid-cols-2 sm:gap-x-4 sm:gap-y-3 sm:px-4 sm:py-3 md:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))_auto_auto] ${isActive
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.9, delay: (index % 8) * 0.08, ease: [0.22, 1, 0.36, 1] },
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 220, damping: 22 }}
+      className={`grid grid-cols-3 items-center gap-x-2 gap-y-3 rounded-2xl border bg-white p-3 shadow-sm transition-shadow duration-500 hover:shadow-md sm:grid-cols-2 sm:gap-x-4 sm:gap-y-3 sm:px-4 sm:py-3 md:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))_auto_auto] ${isActive
         ? "border-[#c29e6d] ring-1 ring-[#c29e6d]"
         : "border-gray-100"
         }`}
@@ -201,7 +217,7 @@ export function UnitRow({ unit, floor, isActive, onSelect }) {
 
       <Metric
         label="Monthly"
-        value={formatMillions(unit.monthlyInstallmentPkr)}
+        value={formatCompactPKR(unit.monthlyInstallmentPkr)}
       />
 
       {/* Desktop status */}
@@ -256,6 +272,106 @@ export function MobileFiltersButton({
   );
 }
 
+function MobileCustomDropdown({
+  value,
+  options,
+  onChange,
+  ariaLabel,
+}) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
+  const selected = options.find(
+    (option) => String(option.value) === String(value)
+  );
+
+  return (
+    <div
+      ref={dropdownRef}
+      className={`relative w-full min-w-0 max-w-[215px] ${open ? "z-[1200]" : "z-0"
+        }`}
+    >
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-[#d1b38c] bg-white px-4 py-2.5 text-left text-sm font-semibold text-[#0f3d20] shadow-sm transition-colors hover:border-[#c29e6d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c29e6d]/40"
+      >
+        <span className="min-w-0 truncate">
+          {selected?.label ?? options[0]?.label}
+        </span>
+
+        <HiChevronDown
+          aria-hidden="true"
+          className={`shrink-0 text-lg text-[#8B5E3C] transition-transform duration-200 ${open ? "rotate-180" : ""
+            }`}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="listbox"
+            aria-label={ariaLabel}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute left-0 right-0 top-full z-[1100] mt-2 max-h-[240px] overflow-y-auto overscroll-contain rounded-xl border border-[#E8DFD2] bg-white p-1.5 shadow-xl [scrollbar-width:thin]"
+          >
+            {options.map((option) => {
+              const active =
+                String(option.value) === String(value);
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                  className={`flex min-h-10 w-full cursor-pointer items-center rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors ${active
+                    ? "bg-[#0f3d20] text-white"
+                    : "text-[#153D2A] hover:bg-[#F7F2EA]"
+                    }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function MobileFiltersDrawer({
   open,
@@ -267,6 +383,11 @@ export function MobileFiltersDrawer({
   view,
   onView,
   sorts,
+  floors,
+  selectedFloorId,
+  onFloorChange,
+  selectedTypes,
+  onTypesChange,
 }) {
   const options = ["All", "Available", "Booked"];
 
@@ -275,11 +396,11 @@ export function MobileFiltersDrawer({
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0, x: 12, scale: 0.96 }}
+          initial={{ opacity: 0, x: 16, scale: 0.96 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: 12, scale: 0.96 }}
-          transition={{ duration: 0.2 }}
-          className="absolute right-[calc(100%+8px)] top-16 z-10 flex w-[min(215px,calc(100vw-125px))] -translate-y-1/2 flex-col items-end gap-2"
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute right-[calc(100%+8px)] top-1/2 z-[1000] flex w-[215px] max-w-[calc(100vw-110px)] flex-col items-stretch gap-2 overflow-visible p-1"
           style={{ y: "-50%" }}
         >
           <div className="flex justify-center gap-1">
@@ -320,21 +441,59 @@ export function MobileFiltersDrawer({
               );
             })}
           </div>
+          {selectedTypes?.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {selectedTypes.map((id) => (
+                <span
+                  key={id}
+                  className="inline-flex items-center gap-1 rounded-full border border-[#c29e6d]/60 bg-white py-1 pl-3 pr-1.5 text-xs font-semibold text-[#8B5E3C]"
+                >
+                  {categoryLabel(id)}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onTypesChange?.(
+                        selectedTypes.filter((t) => t !== id)
+                      )
+                    }
+                    aria-label={`Remove ${categoryLabel(id)} filter`}
+                    className="grid h-5 w-5 place-items-center rounded-full hover:bg-[#c29e6d]/20"
+                  >
+                    <HiXMark className="text-xs" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="relative w-full">
-            <select
+            <MobileCustomDropdown
+              ariaLabel="Sort units"
               value={sortId}
-              onChange={(e) => onSortId(e.target.value)}
-              aria-label="Sort units"
-              className="h-10 w-full cursor-pointer appearance-none rounded-full border border-[#d1b38c] bg-white py-2 pl-3 pr-8 text-xs font-semibold text-[#153D2A] shadow-md outline-none focus:ring-2 focus:ring-[#c29e6d]"
-            >
-              {sorts.map((sort) => (
-                <option key={sort.id} value={sort.id}>
-                  {sort.label}
-                </option>
-              ))}
-            </select>
-            <HiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8B5E3C]" />
+              options={sorts.map((sort) => ({
+                value: sort.id,
+                label: sort.label,
+              }))}
+              onChange={onSortId}
+            />
+          </div>
+
+          <div className="w-full">
+            <MobileCustomDropdown
+              ariaLabel="Select floor"
+              value={selectedFloorId ?? ""}
+              options={[
+                { value: "", label: "All Floors" },
+                ...(floors ?? []).map((floor) => ({
+                  value: String(floor.id),
+                  label: floor.name,
+                })),
+              ]}
+              onChange={(value) =>
+                onFloorChange?.(value === "" ? null : value)
+              }
+            />
           </div>
 
           <div className="flex items-center gap-1.5">

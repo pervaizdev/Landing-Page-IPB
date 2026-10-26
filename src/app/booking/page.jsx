@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
@@ -18,21 +18,43 @@ const BROCHURE_PAGES = Array.from(
 
 export default function BookingPage() {
   const lenis = useLenis();
+  useEffect(() => {
+    // Prevent the browser from restoring the previous scroll position
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    // Move to the hero section immediately
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+    // Also reset Lenis when it is initialized
+    lenis?.scrollTo(0, {
+      immediate: true,
+      force: true,
+    });
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, [lenis]);
   const [buildingId, setBuildingId] = useState(null);
-  const [selectedTypes, setSelectedTypes] = useState([]); // [] = All Units
+  const [selectedTypes, setSelectedTypes] = useState([]); 
   const building = bookingData.buildings.find((b) => b.id === buildingId) ?? null;
 
   const selectBuilding = (id, target = "overview") => {
     setBuildingId(id);
     setSelectedTypes([]);
     const anchor = target === "floors" ? "#floor-explorer" : "#building-overview";
-    // wait for the selected building to render before scrolling
-    setTimeout(() => lenis?.scrollTo(anchor, { offset: -100 }), 50);
+    setTimeout(() => {
+      lenis?.scrollTo(anchor, {
+        offset: -100,
+        duration: 1.45,
+        easing: (t) => 1 - Math.pow(1 - t, 3),
+      });
+    }, 80);
   };
 
   return (
     <>
-      {/* FIXED HERO (NOT SCROLLABLE) */}
       <section className="fixed inset-0 -z-10 h-[80vh] lg:h-[98vh] w-full">
         <Image
           src="/images/2b.jpg"
@@ -137,10 +159,10 @@ export default function BookingPage() {
               <motion.div
                 key={building.id}
                 id="building-overview"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 16 }}
+                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-14"
               >
 
@@ -157,23 +179,42 @@ export default function BookingPage() {
 
                 {building.name?.trim().toLowerCase() === "prime mall & suites" && (
                   <section>
-                    <div className="mx-auto mb-12 max-w-3xl text-center">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs">
+                    <div className="mx-auto mb-12 mt-[120px] lg:mt-[180px] max-w-3xl text-center">
+                      <motion.span
+                        initial={{ opacity: 0, y: 18 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                        className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs"
+                      >
                         <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
                         Our Brochure
-                      </span>
+                      </motion.span>
                       <motion.h2
                         initial={{ opacity: 0, y: 28 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 1.1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                         className="mt-5 text-4xl parisienne-font text-[#0f3d20] lg:text-5xl"
                       >
                         {building?.name} Brochure
                       </motion.h2>
-                      <p className="mx-auto mt-5 max-w-2xl leading-7 text-gray-500 md:text-base">
+                      <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 1.0, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="mx-auto mt-5 h-[2px] w-24 origin-center bg-linear-to-r from-transparent via-[#c29e6d] to-transparent"
+                      />
+                      <motion.p
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="mx-auto mt-5 max-w-2xl leading-7 text-gray-500 text-sm md:text-base"
+                      >
                         Explore the {building?.name} brochure. Drag a page to discover more about the project.
-                      </p>
+                      </motion.p>
                     </div>
                     <BrochureBook
                       pages={BROCHURE_PAGES}

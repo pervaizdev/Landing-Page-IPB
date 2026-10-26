@@ -20,14 +20,34 @@ const PROJECT_META = {
   },
 };
 
+const cardContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.18, delayChildren: 0.12 } },
+};
+
+const cardFade = {
+  hidden: { opacity: 0, y: 48 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function BuildingSelector({
   buildings,
   selectedId,
   onSelect,
 }) {
   return (
-    <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
-      {buildings.map((building, index) => {
+    <motion.div
+      className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6"
+      variants={cardContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.15 }}
+    >
+      {buildings.map((building) => {
         const selected = selectedId === building.id;
         const meta = PROJECT_META[building.id];
 
@@ -43,13 +63,10 @@ export default function BuildingSelector({
             onClick={() => onSelect(building.id, "overview")}
             aria-pressed={selected}
             aria-label={`Explore ${building.name}`}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.08,
-            }}
+            variants={cardFade}
+            whileHover={{ y: -8 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
             className={`
               group relative block w-full
               h-[380px] md:h-[430px] lg:h-[510px]
@@ -216,6 +233,6 @@ export default function BuildingSelector({
           </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
