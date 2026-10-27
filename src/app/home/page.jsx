@@ -184,7 +184,7 @@ export default function HomePage() {
               </motion.h2>
             </div>
 
-            <div className="container mx-auto bg-white grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 pb-20 justify-items-center mt-12 px-4">
+            <div className="container mx-auto bg-white grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 pb-20 justify-items-center mt-12 px-4">
               {projects.map((item, index) => (
                 <div key={item.id}
                   className={index % 2 === 0 ? "lg:justify-self-end" : "lg:justify-self-start"}>

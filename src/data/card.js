@@ -4,7 +4,7 @@ export const projects = [
     id: "prime-mall",
     status: "Delivered Project",
     availability: "Booking Available",
-    location: "TopCity-1",
+    location: "Plot # 5, Kunwar TopCity-1, Sahara Kashmir Rd",
     mapUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.8757274976506!2d72.85799887445984!3d33.58257574238622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df99451f7f9ac7%3A0xd5f412e595daa5b9!2sPrime%20Mall!5e0!3m2!1sen!2s!4v1772365007240!5m2!1sen!2s",
     title: "Prime Mall",
@@ -59,13 +59,13 @@ export const projects = [
     id: "prime-mall-and-suites",
     status: "On Going Project",
     availability: "Booking Available",
-    location: "TopCity-1",
+    location: "Plot # 3, K-Block TopCity-1, Islamabad",
     mapUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1976.3239083764277!2d72.86806109282423!3d33.585388544640914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df99451f7f9ac7%3A0xd5f412e595daa5b9!2sPrime%20Mall!5e0!3m2!1sen!2s!4v1772366366281!5m2!1sen!2s", title: "Prime Mall And Suites",
+      "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6647.538168419354!2d72.8668597!3d33.5853443!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df9900327785cf%3A0x6441fa7d2d521f97!2sPrime%20Mall%20%26%20Suites!5e0!3m2!1sen!2s!4v1793101973975!5m2!1sen!2s",
     title: "Prime Mall And Suites",
     image: "/images/1 a.png",
 
-    projectType: "Commercial and Apartment",
+    projectType: "Commercial and Furnished Apartment",
     floor: "8",
     shopes: "79",
     offices: null,
@@ -87,7 +87,7 @@ export const projects = [
       },
       {
         label: "Number of Floors",
-        text: "8 floors, including the 24 bedrooms, 36 studios , 79 shopes , 3 restaurant , 1 gym and thoughtfully designed for both commercial and residential use.",
+        text: "8 floors, including the 24 bedrooms, 36 studios , 79 shopes , 3 restaurant , 1 gym and thoughtfully designed for both commercial and  use.",
       },
       {
         label: "Special Features",
@@ -111,39 +111,37 @@ export const projects = [
     },
   },
 
-   {
+  {
     id: "prime-gold",
-    status: "Comming Soon",
+    status: "Coming Soon",
     availability: "Booking Available",
-    location: "TopCity-1",
+    location: "Plot # 3C, K-Block TopCity-1, Islamabad",
     mapUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1976.3239083764277!2d72.86806109282423!3d33.585388544640914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df99451f7f9ac7%3A0xd5f412e595daa5b9!2sPrime%20Mall!5e0!3m2!1sen!2s!4v1772366366281!5m2!1sen!2s", title: "Prime Mall And Suites",
     title: "Prime Gold",
     image: "/images/3b.jpeg",
 
-    projectType: "Residential",
+    projectType: "Commercial and Residential",
     floor: "12",
     shopes: "79",
     offices: null,
-    studios: "36",
+    studios: null,
     bedrooms: "24",
     restaurant: "3",
-    gym: "2",
+    gym: null,
     commencementDate: "1 November, 2026",
-
     description: [
-      "Prime Gold is a new residential project coming soon, offering a modern and comfortable living experience in Islamabad. It is designed to provide a peaceful and luxurious lifestyle with spacious apartments, thoughtful amenities, and a convenient location. The goal is to create a beautiful home environment where families can relax, grow, and enjoy a high quality of life. We are committed to delivering this project within two years, ensuring it meets the highest standards of quality and satisfaction for our residents.",
-      "With Prime Gold, we are focused on building more than just a property — we are creating a home. From thoughtful design and quality construction to secure facilities and excellent services, every detail will be carefully planned to meet high standards. We are committed to delivering this project within two years, ensuring it stands as a place people can trust, enjoy, and be proud of for years to come.",
+      "Prime Gold is an upcoming premium commercial and residential development by Islamabad Prime Builders, designed to bring modern living and business opportunities together in Islamabad. Featuring elegant architecture, spacious residential apartments, well-planned commercial spaces, and a large dedicated parking area, the project offers an ideal combination of luxury, comfort, and convenience. Every detail is thoughtfully designed to ensure accessibility, functionality, and long-term investment value.",
+      "Prime Gold aims to create a vibrant destination where businesses can grow and families can enjoy a modern lifestyle. With contemporary design, quality construction, secure facilities, and generous parking space, the project is planned to provide a comfortable and welcoming environment for residents, businesses, and visitors. Our vision is to establish Prime Gold as a distinguished landmark for living, shopping, and investment in Islamabad."
     ],
-
     keyDetails: [
       {
         label: "Location",
-        text: "Plot # 3, K-Block TopCity-1, Islamabad.",
+        text: "Plot # 3C, K-Block TopCity-1, Islamabad.",
       },
       {
         label: "Number of Floors",
-        text: "8 floors, including the 24 bedrooms, 36 studios , 79 shopes , 3 restaurant , 1 gym and thoughtfully designed for both commercial and residential use.",
+        text: "12 floors, including the 24 bedrooms, 79 shopes , 3 restaurant  and thoughtfully designed for both commercial and residential use.",
       },
       {
         label: "Special Features",

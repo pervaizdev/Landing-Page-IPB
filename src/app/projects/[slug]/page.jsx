@@ -124,10 +124,10 @@ export default function Page({ params }) {
           <MediaSection project={project} />
         </AnimatedSection>
 
-        <ProjectUnitExplorer
-          key={project.id}
-          project={project}
-        />
+        <AnimatedSection className="-mt-27" >
+          <ProjectUnitExplorer key={project.id} project={project} />
+        </AnimatedSection>
+
 
         <AnimatedSection className="container mx-auto">
           <Location project={project} />

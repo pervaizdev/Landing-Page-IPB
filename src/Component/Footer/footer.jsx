@@ -136,11 +136,11 @@ export default function FooterSection() {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center md:justify-start gap-3 group transition"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition duration-200">
-                    <FaWhatsapp className="text-lg" />
+                  <span className="flex text-[#25D366] transition duration-200">
+                    <FaWhatsapp className="text-2xl" />
                   </span>
                   <div className="text-left">
-                    <span className="block text-base font-bold text-black group-hover:text-[#25D366] transition">
+                    <span className="block text-base font-bold text-black">
                       +92 312 2222 321
                     </span>
                    
@@ -152,11 +152,11 @@ export default function FooterSection() {
                   href="tel:+92517234000"
                   className="flex items-center justify-center md:justify-start gap-3 group transition"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c29e6d]/20 text-[#8B5E3C] group-hover:bg-[#c29e6d] group-hover:text-white transition duration-200">
-                    <FaPhoneAlt className="text-sm" />
+                  <span className="flex text-[#8B5E3C] transition duration-200">
+                    <FaPhoneAlt className="text-lg" />
                   </span>
                   <div className="text-left">
-                    <span className="block text-base font-bold text-black group-hover:text-[#8B5E3C] transition">
+                    <span className="block text-base ms-1.5 font-bold text-black">
                       +92 51 7234000
                     </span>
                    
@@ -181,7 +181,7 @@ export default function FooterSection() {
                     aria-label={s.label}
                     className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f2ea] hover:bg-[#c6bda7] transition-all duration-300"
                   >
-                    <s.icon className="text-sm" style={{ color: s.color }} />
+                    <s.icon className="text-lg" style={{ color: s.color }} />
                   </a>
                 ))}
               </div>
