@@ -142,7 +142,7 @@ export const projects = [
     studios: "58",
     bedrooms: "14",
     gym: null,
-    commencementDate: "10 November, 2026",
+    commencementDate: "7 November, 2026",
     description: [
       "Prime Gold is an upcoming premium commercial and residential development by Islamabad Prime Builders, designed to bring modern living and business opportunities together in Islamabad. Featuring elegant architecture, spacious residential apartments, well-planned commercial spaces, and a large dedicated parking area, the project offers an ideal combination of luxury, comfort, and convenience. Every detail is thoughtfully designed to ensure accessibility, functionality, and long-term investment value.",
       "Prime Gold aims to create a vibrant destination where businesses can grow and families can enjoy a modern lifestyle. With contemporary design, quality construction, secure facilities, and generous parking space, the project is planned to provide a comfortable and welcoming environment for residents, businesses, and visitors. Our vision is to establish Prime Gold as a distinguished landmark for living, shopping, and investment in Islamabad."
@@ -168,16 +168,18 @@ export const projects = [
 
     media: {
       photos: [
-        { id: "p1", src: "/images/pg1.webp", alt: "Photo 1" },
+        { id: "p1", src: "/images/pg1.jpeg", alt: "Photo 1" },
         { id: "p2", src: "/images/pg2.webp", alt: "Photo 2" },
-        { id: "p3", src: "/images/pg3.webp", alt: "Photo 3" },
         { id: "p4", src: "/images/pg4.webp", alt: "Photo 4" },
-        { id: "p5", src: "/images/pg5.webp", alt: "Photo 5" },
+        { id: "p7", src: "/images/pg7.jpeg", alt: "Photo 7" },
+        { id: "p8", src: "/images/pg8.jpeg", alt: "Photo 8" },
+        { id: "p9", src: "/images/pg9.jpeg", alt: "Photo 9" },
+        { id: "p10", src: "/images/pg10.jpeg", alt: "Photo 10" },
       ],
       videos: [
         {
           id: "v1",
-          src: "/videos/PG.webm",
+          src: "/videos/PG-small.webm",
         },
       ],
     },

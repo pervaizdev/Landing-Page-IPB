@@ -44,12 +44,13 @@ export default function FeaturesProjects({ item }) {
     >
       <Link href={`/projects/${item.id}`} className="block group">
         <div
-          className={`relative h-[450px] w-[320px] lg:w-[400px] overflow-hidden rounded-[30px] shadow-xl transition-all duration-500 ${isHighlighted
-            ? "border border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)]"
-            : isDelivered
-              ? "border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)]"
-              : ""
-            }`}
+          className={`relative h-[450px] w-[320px] lg:w-[400px] overflow-hidden rounded-[30px] shadow-xl transition-all duration-500 ${
+            isHighlighted
+              ? "border border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)]"
+              : isDelivered
+                ? "border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+                : ""
+          }`}
         >
           {/* Project Image */}
           <motion.div
@@ -71,30 +72,37 @@ export default function FeaturesProjects({ item }) {
 
           {/* Image Overlay */}
           <div
-            className={`absolute inset-0 transition-all duration-500 ${isOngoing
-              ? "bg-linear-to-t from-black/90 via-black/60 to-transparent"
-              : isDelivered
-                ? "bg-linear-to-t from-black/90 via-black/40 to-transparent"
-                : isComingSoon
-                  ? "bg-linear-to-t from-black/90 via-black/60 to-transparent"
-                  : "bg-linear-to-t from-black/90 via-black/30 to-transparent lg:from-black/40 lg:via-transparent group-hover:from-black/90 group-hover:via-black/40"
-              }`}
+            className={`absolute inset-0 transition-all duration-500 ${
+              isOngoing
+                ? "bg-linear-to-t from-black/90 via-black/60 to-transparent"
+                : isDelivered
+                  ? "bg-linear-to-t from-black/90 via-black/40 to-transparent"
+                  : isComingSoon
+                    ? "bg-linear-to-t from-black/90 via-black/60 to-transparent"
+                    : "bg-linear-to-t from-black/90 via-black/30 to-transparent lg:from-black/40 lg:via-transparent group-hover:from-black/90 group-hover:via-black/40"
+            }`}
           />
 
-          {/* Status + Availability Badges */}
-          <div className="absolute top-6 left-6 right-6 z-20 flex items-start justify-between gap-3">
+          {/* Responsive Status + Availability Badges */}
+          <div className="absolute top-5 left-4 right-4 z-20 flex items-center justify-between gap-2 sm:top-6 sm:left-6 sm:right-6">
+            {/* Status Badge */}
             <span
-              className={`rounded-full border px-4 py-2 text-xs font-semibold shadow-lg backdrop-blur-md transition-all duration-300 ${isDelivered
-                  ? "border-white bg-white text-black"
+              className={`inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-2.5 text-[10px] font-semibold leading-none shadow-md backdrop-blur-md transition-all duration-300 sm:h-9 sm:px-4 sm:text-xs ${
+                isDelivered
+                  ? "border-white/40 bg-white/95 text-black"
                   : isHighlighted
-                    ? "animate-pulse border-amber-400 bg-amber-500/90 text-black shadow-[0_0_15px_rgba(245,158,11,0.4)]"
+                    ? "animate-pulse border-amber-400/70 bg-amber-500/90 text-black shadow-[0_0_15px_rgba(245,158,11,0.4)]"
                     : "border-white/20 bg-black/60 text-white"
-                }`}
+              }`}
             >
               {isComingSoon ? "Coming Soon" : item.status}
             </span>
+
+            {/* Availability Badge */}
             {item.availability && (
-              <span className="rounded-full border border-[#e5c488]/60 bg-[#c29e6d] px-4 py-2 text-xs font-semibold text-black shadow-lg">
+              <span
+                className="inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[#e5c488]/60 bg-[#c29e6d] px-2.5 text-[10px] font-semibold leading-none text-black shadow-md sm:h-9 sm:px-4 sm:text-xs"
+              >
                 {item.availability}
               </span>
             )}
@@ -111,8 +119,9 @@ export default function FeaturesProjects({ item }) {
             />
 
             <h3
-              className={`text-3xl font-bold parisienne-font leading-tight drop-shadow-lg ${isHighlighted ? "text-amber-400" : "text-white"
-                }`}
+              className={`text-3xl font-bold parisienne-font leading-tight drop-shadow-lg ${
+                isHighlighted ? "text-amber-400" : "text-white"
+              }`}
             >
               {item.title}
             </h3>

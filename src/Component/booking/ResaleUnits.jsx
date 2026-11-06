@@ -133,7 +133,7 @@ export default function ResaleUnits({ building }) {
         transition={{ duration: 1.1, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="mt-3 text-4xl parisienne-font text-[#0f3d20] lg:text-5xl"
       >
-        Units Available for Sale
+        Units Available for ReSale
       </motion.h2>
 
       <motion.div
@@ -149,7 +149,7 @@ export default function ResaleUnits({ building }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 1.0, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-gray-500 md:text-base"
+        className="mx-auto mt-12 max-w-2xl text-sm leading-relaxed text-gray-500 md:text-base"
       >
         Explore selected units currently available for sale at {building.name}.
         Contact us for availability, site visits, and purchase details.
@@ -160,7 +160,7 @@ export default function ResaleUnits({ building }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.1 }}
-        className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3"
       >
         {units.map((unit, index) => (
           <SaleCard key={unit.id} unit={unit} index={index} />
