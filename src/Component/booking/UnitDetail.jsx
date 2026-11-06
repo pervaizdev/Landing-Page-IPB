@@ -140,7 +140,7 @@ export default function UnitDetail({ building, floor, unit, onClose, layout = "m
             <h4 className="border-b border-gray-200 pb-1.5 text-base font-bold text-[#153D2A]">Payment details</h4>
             {hasDown && (
               <DetailRow
-                label={downPct ? `Initial Down Payment (${downPct})` : "Initial Down Payment"}
+                label={downPct ? `Down Payment (${downPct})` : "Down Payment"}
                 value={`${formatMillionBillion(unit.bookingAmountPkr)}`}
               />
             )}

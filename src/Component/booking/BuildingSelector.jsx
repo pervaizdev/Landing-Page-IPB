@@ -9,14 +9,17 @@ const PROJECT_META = {
   "prime-mall": {
     status: "Delivered Project",
     subtitle: "Commercial",
+    availability: "Resale Available",
   },
   "prime-mall-and-suites": {
     status: "Ongoing Project",
     subtitle: "Commercial & Furnished Apartments",
+    availability: "Booking Available",
   },
   "prime-gold": {
     status: "Coming Soon",
     subtitle: "Premium Residential",
+    availability: "Booking Available",
   },
 };
 
@@ -64,11 +67,10 @@ export default function BuildingSelector({
             aria-pressed={selected}
             aria-label={`Explore ${building.name}`}
             variants={cardFade}
-            whileHover={{ y: -8 }}
             whileTap={{ scale: 0.99 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
             className={`
-              group relative block w-full
+              relative block w-full
               h-[380px] md:h-[430px] lg:h-[510px]
               cursor-pointer overflow-hidden
               rounded-2xl lg:rounded-[28px]
@@ -79,9 +81,9 @@ export default function BuildingSelector({
               focus-visible:ring-[#c29e6d]/40
               ${selected
                 ? "border-[#c29e6d] ring-2 ring-[#c29e6d]/30 shadow-[0_12px_40px_rgba(194,158,109,0.35)]"
-                : "border-transparent shadow-lg hover:border-[#c29e6d]/50 hover:shadow-2xl"
+                : "border-transparent shadow-lg"
               }
-`}
+            `}
           >
             {/* Building Image */}
             {building.image && (
@@ -90,12 +92,7 @@ export default function BuildingSelector({
                 alt={building.name}
                 fill
                 sizes="(max-width: 767px) 100vw, (max-width: 1023px) 33vw, 33vw"
-                className="
-                  object-cover
-                  transition-transform duration-700 ease-out
-                  group-hover:scale-[1.06]
-                  group-focus-visible:scale-[1.06]
-                "
+                className="object-cover"
               />
             )}
 
@@ -105,7 +102,6 @@ export default function BuildingSelector({
                 absolute inset-0
                 bg-gradient-to-t
                 from-black/95 via-black/30 to-black/15
-                transition-all duration-500
               "
             />
 
@@ -144,7 +140,7 @@ export default function BuildingSelector({
                   whitespace-nowrap
                 "
               >
-                Booking Available
+                {meta?.availability ?? "Booking Available"}
               </span>
             </div>
 
@@ -157,78 +153,56 @@ export default function BuildingSelector({
                 text-white
               "
             >
-              <div
+              {/* Gold Accent */}
+              <div className="mb-3 h-[2px] w-14 bg-[#c29e6d] lg:w-16" />
+
+              {/* Building Name */}
+              <h3
+                className={`
+                  parisienne-font
+                  text-3xl lg:text-4xl
+                  font-bold leading-tight
+                  ${isAmberTitle
+                    ? "text-amber-400"
+                    : "text-white"
+                  }
+                `}
+              >
+                {building.name}
+              </h3>
+
+              {/* Building Type */}
+              <p
                 className="
-                  translate-y-3 opacity-0
-                  transition-all duration-500 ease-out
-                  group-hover:translate-y-0
-                  group-hover:opacity-100
-                  group-focus-visible:translate-y-0
-                  group-focus-visible:opacity-100
-                  [@media(hover:none)]:translate-y-0
-                  [@media(hover:none)]:opacity-100
+                  mt-2
+                  text-sm lg:text-base
+                  font-medium tracking-wide
+                  text-white/85
+                  leading-relaxed
                 "
               >
-                {/* Gold Accent */}
-                <div className="mb-3 h-[2px] w-14 bg-[#c29e6d] lg:w-16" />
+                {meta?.subtitle ?? building.projectType}
+              </p>
 
-                {/* Building Name */}
-                <h3
-                  className={`
-                    parisienne-font
-                    text-3xl lg:text-4xl
-                    font-bold leading-tight
-                    ${isAmberTitle
-                      ? "text-amber-400"
-                      : "text-white"
-                    }
-                  `}
-                >
-                  {building.name}
-                </h3>
+              {/* Dynamic Location */}
+              {building.location && (
+                <div className="mt-3 flex items-start gap-2 text-white/75">
+                  <HiLocationMarker
+                    className="mt-0.5 shrink-0 text-base text-[#c29e6d]"
+                  />
 
-                {/* Building Type */}
-                <p
-                  className="
-                    mt-2
-                    text-sm lg:text-base
-                    font-medium tracking-wide
-                    text-white/85
-                    leading-relaxed
-                  "
-                >
-                  {meta?.subtitle ?? building.projectType}
-                </p>
-
-                {/* Dynamic Location */}
-                {building.location && (
-                  <div
+                  <p
                     className="
-                      mt-3 flex items-start gap-2
-                      text-white/75
+                      min-w-0
+                      line-clamp-2
+                      text-xs lg:text-sm
+                      leading-relaxed
                     "
                   >
-                    <HiLocationMarker
-                      className="
-                        mt-0.5 shrink-0
-                        text-base
-                        text-[#c29e6d]
-                      "
-                    />
-
-                    <p
-                      className="
-                        min-w-0
-                        line-clamp-2
-                        text-xs lg:text-sm
-                        leading-relaxed
-                      "
-                    >
-                      {building.location}
-                    </p>
-                  </div>
-                )}
-              </div>
+                    {building.location}
+                  </p>
+                </div>
+              )}
             </div>
           </motion.button>
         );

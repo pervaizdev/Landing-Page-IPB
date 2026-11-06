@@ -29,7 +29,7 @@ export default function ProjectPage() {
       {/* FIXED HERO (NOT SCROLLABLE) */}
       <section className="fixed inset-0 -z-10 h-[80vh] lg:h-[98vh] w-full">
         <Image
-          src="/images/2b.jpg"
+          src="/images/2b.webp"
           alt="Background"
           fill
           priority

@@ -8,13 +8,28 @@ import FooterSection from "@/Component/Footer/footer";
 import BuildingSelector from "@/Component/booking/BuildingSelector";
 import FindYourUnit from "@/Component/booking/FindYourUnit";
 import FloorExplorer from "@/Component/booking/FloorExplorer";
+import ResaleUnits from "@/Component/booking/ResaleUnits";
 import BrochureBook from "@/Component/booking/BrochureBook";
 import bookingData from "@/data/booking.json";
 
-const BROCHURE_PAGES = Array.from(
-  { length: 60 },
-  (_, i) => `/brochure/page-${i + 1}.webp`
-);
+const BROCHURES = {
+  "prime-mall-and-suites": {
+    pages: Array.from(
+      { length: 60 },
+      (_, i) => `/brochure/prime mall and suites/page-${i + 1}.webp`
+    ),
+    title: "Prime Mall & Suites brochure",
+    pageAspect: 1,
+  },
+  "prime-gold": {
+    pages: Array.from(
+      { length: 70 },
+      (_, i) => `/brochure/Prime Gold/page-${i + 1}.webp`
+    ),
+    title: "Prime Gold brochure",
+    pageAspect: 1,
+  },
+};
 
 export default function BookingPage() {
   const lenis = useLenis();
@@ -57,7 +72,7 @@ export default function BookingPage() {
     <>
       <section className="fixed inset-0 -z-10 h-[80vh] lg:h-[98vh] w-full">
         <Image
-          src="/images/2b.jpg"
+          src="/images/2b.webp"
           alt="Booking background"
           fill
           priority
@@ -166,18 +181,24 @@ export default function BookingPage() {
                 className="space-y-14"
               >
 
-                <FindYourUnit building={building} selected={selectedTypes} onChange={setSelectedTypes} />
+                {building.inventoryMode === "resale" ? (
+                  <ResaleUnits building={building} />
+                ) : (
+                  <>
+                    <FindYourUnit building={building} selected={selectedTypes} onChange={setSelectedTypes} />
 
-                <div id="floor-explorer">
-                  <FloorExplorer
-                    key={building.id}
-                    building={building}
-                    selectedTypes={selectedTypes}
-                    onTypesChange={setSelectedTypes}
-                  />
-                </div>
+                    <div id="floor-explorer">
+                      <FloorExplorer
+                        key={building.id}
+                        building={building}
+                        selectedTypes={selectedTypes}
+                        onTypesChange={setSelectedTypes}
+                      />
+                    </div>
+                  </>
+                )}
 
-                {building.name?.trim().toLowerCase() === "prime mall & suites" && (
+                {BROCHURES[building.id] && (
                   <section>
                     <div className="mx-auto mb-12 mt-[120px] lg:mt-[180px] max-w-3xl text-center">
                       <motion.span
@@ -217,10 +238,13 @@ export default function BookingPage() {
                       </motion.p>
                     </div>
                     <BrochureBook
-                      pages={BROCHURE_PAGES}
+                      pages={BROCHURES[building?.id]?.pages ?? []}
                       building={building}
-                      title="Prime Mall & Suites brochure"
-                      pageAspect={1}
+                      title={
+                        BROCHURES[building?.id]?.title ??
+                        `${building?.name ?? "Project"} brochure`
+                      }
+                      pageAspect={BROCHURES[building?.id]?.pageAspect ?? 1}
                     />
                   </section>
                 )}

@@ -64,7 +64,7 @@ export default function CompanyStory() {
           className="relative h-[320px] lg:h-[550px] overflow-hidden rounded-3xl shadow-xl"
         >
           <Image
-            src="/images/2b.jpg"
+            src="/images/pg6.jpeg"
             alt="Company Story"
             fill
             className="object-cover transition-transform duration-700 hover:scale-105"

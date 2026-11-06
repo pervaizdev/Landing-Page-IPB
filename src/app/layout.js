@@ -29,7 +29,7 @@ export const metadata = {
   title: "Islamabad Prime Builders | Premium Real Estate & Construction",
   description: "Experience luxury living with Islamabad Prime Builders. We create innovative communities and premium developments with international quality standards.",
   icons: {
-    icon: "/images/logo.png",
+    icon: "/images/logo.webp",
   },
 };
 

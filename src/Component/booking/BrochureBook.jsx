@@ -501,13 +501,21 @@ function InteractiveBrochureBook({
     </div>
   );
 }
-// Only Prime Mall & Suites has a published brochure.
+const PUBLISHED_BROCHURES = new Set([
+  "prime mall & suites",
+  "prime gold",
+]);
+
 // If no building is passed, preserve the existing standalone flipbook behavior.
 export default function BrochureBook({ building, pages = [], title = "Brochure", pageAspect = 1.1 }) {
   const projectName = typeof building === "string" ? building : building?.name;
   const hasSelectedProject = Boolean(projectName);
-  const isSuites = projectName?.trim().toLowerCase() === "prime mall & suites";
-  if (hasSelectedProject && !isSuites) {
+  const hasBrochure =
+    pages.length > 0 &&
+    (!hasSelectedProject ||
+      PUBLISHED_BROCHURES.has(projectName.trim().toLowerCase()));
+
+  if (hasSelectedProject && !hasBrochure) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-8 text-center md:py-12">
         <div className="rounded-3xl border border-[#d1b38c]/35 bg-[#faf8f5] px-6 py-10 md:px-10 md:py-14">

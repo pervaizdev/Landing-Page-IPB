@@ -135,7 +135,7 @@ export default function Navbar() {
                     className="flex min-w-0 items-center gap-3 md:min-w-[260px]"
                   >
                     <Image
-                      src="/images/logo.png"
+                      src="/images/logo.webp"
                       alt="Logo"
                       width={44}
                       height={44}

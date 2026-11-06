@@ -81,8 +81,8 @@ export default function FeaturesProjects({ item }) {
               }`}
           />
 
-          {/* Status Badge */}
-          <div className="absolute top-6 left-6 z-20">
+          {/* Status + Availability Badges */}
+          <div className="absolute top-6 left-6 right-6 z-20 flex items-start justify-between gap-3">
             <span
               className={`rounded-full border px-4 py-2 text-xs font-semibold shadow-lg backdrop-blur-md transition-all duration-300 ${isDelivered
                   ? "border-white bg-white text-black"
@@ -93,6 +93,11 @@ export default function FeaturesProjects({ item }) {
             >
               {isComingSoon ? "Coming Soon" : item.status}
             </span>
+            {item.availability && (
+              <span className="rounded-full border border-[#e5c488]/60 bg-[#c29e6d] px-4 py-2 text-xs font-semibold text-black shadow-lg">
+                {item.availability}
+              </span>
+            )}
           </div>
 
           {/* Bottom Project Information */}

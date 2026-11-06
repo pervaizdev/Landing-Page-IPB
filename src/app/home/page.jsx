@@ -97,7 +97,7 @@ function Intro({ onDone }) {
       exit={{ opacity: 0, transition: { duration: 0.4 } }}
     >
       <motion.img
-        src="/images/logo.png"
+        src="/images/logo.webp"
         alt="Logo"
         className="h-24 w-24 md:h-32 md:w-32 select-none"
         style={{

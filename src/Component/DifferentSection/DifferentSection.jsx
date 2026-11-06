@@ -45,7 +45,7 @@ export default function DifferentSection() {
         <motion.div variants={stagger} className="relative">
           <motion.div variants={fadeUpSoft} className="rounded-[40px] overflow-hidden">
             <Image
-              src="/images/1 ba night.jpg"
+              src="/images/1 ba night.webp"
               alt="What makes us different"
               width={600}
               height={700}

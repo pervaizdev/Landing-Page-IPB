@@ -9,7 +9,6 @@ import {
   HiOutlineBuildingOffice,
   HiOutlineShoppingBag,
   HiOutlineHomeModern,
-  HiOutlineCake,
   HiOutlineHome,
   HiOutlineBolt,
 } from "react-icons/hi2";
@@ -22,7 +21,10 @@ import {
   LuBedSingle,
   LuBedDouble,
   LuBuilding2,
+  LuShoppingCart,
+  LuShoppingBag,
 } from "react-icons/lu";
+import { MdOutlineIcecream } from "react-icons/md";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -60,15 +62,18 @@ export default function CardDetails({ project, InfoItem }) {
       value: project.projectType,
     },
     { icon: LuBuilding2, label: "Floors", value: project.floor },
-    { icon: HiOutlineBuildingOffice, label: "Offices", value: project.offices },
     { icon: LuStore, label: "Shops", value: project.shopes },
-    { icon: LuHouse, label: "Studios", value: project.studios },
+    { icon: LuShoppingCart, label: "Mart", value: project.mart },
+    { icon: HiOutlineBuildingOffice, label: "Offices", value: project.offices },
+    { icon: LuShoppingBag, label: "Kiosks", value: project.kiosks },
     { icon: LuUtensilsCrossed, label: "Restaurants", value: project.restaurant },
+    { icon: MdOutlineIcecream, label: "Ice Cream Bar", value: project.icecreambar },
+    { icon: LuHouse, label: "Studios", value: project.studios },
     { icon: LuBedDouble, label: "Bedrooms", value: project.bedrooms },
     { icon: LuDumbbell, label: "Gym", value: project.gym },
     {
       icon: HiOutlineCalendarDays,
-      label: "Commencement date",
+      label: "Launch date",
       value: project.commencementDate,
     },
   ].filter((item) => shouldShow(item.value));

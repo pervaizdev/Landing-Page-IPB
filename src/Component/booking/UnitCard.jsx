@@ -35,10 +35,7 @@ export const unitTypeLabel = (type) => {
 };
 // Short property-type name used on cards and list rows (Shop, Studio, 1 Bedroom...).
 export const unitTypeShort = (unit) => {
-  const key = unitTypeKey(unit);
-  const bed = key.match(/^(\d+)-bed$/);
-  if (bed) return `${bed[1]} Bedroom`;
-  return unit?.type ? unitTypeLabel(unit.type).replace(/ Apartment$/, "") : "";
+  return String(unit?.type ?? "").trim();
 };
 export function formatPKR(value) {
   return value == null || !Number.isFinite(Number(value)) ? "—" : Math.round(Number(value)).toLocaleString("en-PK");

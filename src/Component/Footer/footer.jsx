@@ -75,7 +75,7 @@ export default function FooterSection() {
             >
               <div className="flex items-center gap-3">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.webp"
                   alt="Islamabad Prime Builder"
                   width={72}
                   height={72}
@@ -113,7 +113,7 @@ export default function FooterSection() {
                       href={link.href}
                       className="inline-flex items-center gap-2 hover:text-black transition"
                     >
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#c29e6d]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#e2ceab]" />
                       {link.name}
                     </Link>
                   </li>
@@ -152,7 +152,7 @@ export default function FooterSection() {
                   href="tel:+92517234000"
                   className="flex items-center justify-center md:justify-start gap-3 group transition"
                 >
-                  <span className="flex text-[#8B5E3C] transition duration-200">
+                  <span className="flex text-[#e2ceab] transition duration-200">
                     <FaPhoneAlt className="text-lg" />
                   </span>
                   <div className="text-left">

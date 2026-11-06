@@ -14,7 +14,7 @@ export const awardSections = [
       "Innovation & sustainable growth",
     ],
     image: {
-      src: "/images/a1.png",
+      src: "/images/a1.webp",
       alt: "ICCI Business Excellence Award",
     },
   },
@@ -32,7 +32,7 @@ export const awardSections = [
   //     "Refined glass craftsmanship",
   //   ],
   //   image: {
-  //     src: "/images/a2.png",
+  //     src: "/images/a2.webp",
   //     alt: "Chief Guest Appreciation Award",
   //   },
   // },
