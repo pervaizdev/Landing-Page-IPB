@@ -10,12 +10,12 @@ import Description from "@/Component/ProjectDescription.jsx";
 import MediaSection from "@/Component/MediaSection";
 import Location from "@/Component/Location";
 import { motion } from "framer-motion";
-
 import {
   AnimatedSection,
   AnimatedImage,
   AnimatedDivider,
 } from "@/Component/AnimationWrappers";
+import ProjectUnitExplorer from "@/Component/ProjectUnitExplorer";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -55,7 +55,7 @@ export default function Page({ params }) {
     <>
       <div className="fixed inset-0 -z-10 h-[90vh] lg:h-[95vh] w-full">
         <Image
-          src="/images/2b.jpg"
+          src="/images/2b.webp"
           alt="Background"
           fill
           priority
@@ -122,6 +122,10 @@ export default function Page({ params }) {
 
         <AnimatedSection >
           <MediaSection project={project} />
+        </AnimatedSection>
+
+        <AnimatedSection className="-mt-27" >
+          <ProjectUnitExplorer key={project.id} project={project} />
         </AnimatedSection>
 
         <AnimatedSection className="container mx-auto">

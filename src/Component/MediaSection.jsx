@@ -178,10 +178,18 @@ export default function ProjectMediaSection({ project }) {
                 className="rounded-4xl overflow-hidden border border-gray-200 bg-black"
               >
                 <video
-                  src={video.src}
                   controls
+                  preload="metadata"
                   className="w-full h-[550px] md:h-[560px] object-cover"
-                />
+                >
+                  {video.src?.endsWith(".webm") ? (
+                    <source src={video.src} type="video/webm" />
+                  ) : null}
+                  <source
+                    src={video.fallbackSrc || video.src}
+                    type="video/mp4"
+                  />
+                </video>
                 {video.title && (
                   <div className="px-5 py-4 bg-white">
                     <p className="text-sm font-medium text-black">

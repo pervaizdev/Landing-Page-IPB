@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 const partners = [
   {
     name: "Islamabad Prime Builders",
-    src: "/images/logo.png",
+    src: "/images/logo.webp",
     description: "Building modern spaces for living, business, and investment in Islamabad.",
   },
   {
     name: "Islamabad Tea Company",
-    src: "/images/partner logo.png",
+    src: "/images/partner logo.webp",
     description: "Delivering quality tea and unforgettable taste experiences.",
   },
 
