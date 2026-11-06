@@ -70,3 +70,7 @@ coverage/
 *.swo
 tmp/
 temp/
+.tools/
+media-*-report*.json
+media-pg-encode*.log
+*.webm.encoding

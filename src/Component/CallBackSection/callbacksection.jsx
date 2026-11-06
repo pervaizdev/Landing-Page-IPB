@@ -102,7 +102,7 @@ export default function CallBackSection() {
         <div
           className="rounded-[25px] bg-cover bg-center px-2 py-20 md:rounded-[36px] md:px-16 sm:px-10"
           style={{
-            backgroundImage: "url('/images/1 ba night.jpg')",
+            backgroundImage: "url('/images/1 ba night.webp')",
           }}
         >
           {/* White Card (Animation starts here) */}

@@ -158,7 +158,7 @@ export default function ContactPage() {
       {/* FIXED HERO (NOT SCROLLABLE) */}
       <section className="fixed inset-0 -z-10 h-[80vh] lg:h-[98vh] w-full">
         <Image
-          src="/images/2b.jpg"
+          src="/images/2b.webp"
           alt="Background"
           fill
           priority
@@ -218,7 +218,7 @@ export default function ContactPage() {
             >
               <motion.span
                 variants={fadeUpSoft}
-                className="inline-flex items-center gap-2 rounded-full border px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] shadow-sm"
+                className="inline-flex items-center lg:ms-0 ms-23 gap-2 rounded-full border px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] shadow-sm"
                 style={{
                   borderColor: "#d1b38c",
                   color: "#8B5E3C",

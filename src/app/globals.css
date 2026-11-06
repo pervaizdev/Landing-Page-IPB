@@ -5,12 +5,14 @@
 *::after {
   box-sizing: border-box;
 }
+
 html,
 body {
   width: 100%;
   overflow-x: clip;
   scroll-behavior: smooth;
 }
+
 body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
@@ -23,7 +25,7 @@ body {
   color: #c29e6d;
 }
 
-.primary-bg{
+.primary-bg {
   background-color: #c29e6d;
 }
 
@@ -64,27 +66,31 @@ body {
   opacity: 1;
 }
 
-.homeswipper .swiper-slide img{
+.homeswipper .swiper-slide img {
   height: 80px;
   width: 80px;
 }
+
 /* globals.css (or any loaded css file) */
 @keyframes shimmerText {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 .shimmer-gold {
-  background: linear-gradient(
-    90deg,
-    #d4af37,
-    #f6e27a,
-    #eed498,
-    #ffffff,
-    #eed498,
-    #f6e27a,
-    #d4af37
-  );
+  background: linear-gradient(90deg,
+      #d4af37,
+      #f6e27a,
+      #eed498,
+      #ffffff,
+      #eed498,
+      #f6e27a,
+      #d4af37);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -94,9 +100,9 @@ body {
 
 .premium-border-glow {
   position: relative;
-  padding: 1.5px;            
+  padding: 1.5px;
   overflow: hidden;
-  isolation: isolate;        
+  isolation: isolate;
 }
 
 /* Animated border */
@@ -107,14 +113,12 @@ body {
   border-radius: inherit;
   padding: 1.5px;
 
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(238, 212, 152, 0.15) 40%,
-    #c29e6d 50%,
-    rgba(238, 212, 152, 0.15) 60%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(238, 212, 152, 0.15) 40%,
+      #c29e6d 50%,
+      rgba(238, 212, 152, 0.15) 60%,
+      transparent 100%);
   background-repeat: no-repeat;
   background-size: 18% 100%;
   background-position: 0% 50%;
@@ -128,37 +132,80 @@ body {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-          mask-composite: exclude;
+  mask-composite: exclude;
 
-  z-index: 0;               /* ✅ keep behind */
+  z-index: 0;
+  /* ✅ keep behind */
 }
 
 /* Inner wrapper must be above the border */
-.premium-border-glow > .inner-content {
+.premium-border-glow>.inner-content {
   position: relative;
-  z-index: 1;               /* ✅ keep visible */
-  background: #fff;         /* ✅ your navbar background */
+  z-index: 1;
+  /* ✅ keep visible */
+  background: #fff;
+  /* ✅ your navbar background */
   border-radius: inherit;
 }
 
 /* Pause + bloom animation (same you wanted) */
 @keyframes border-travel-pause {
-  0%   { background-position: 0% 50%;   background-size: 14% 100%; }
+  0% {
+    background-position: 0% 50%;
+    background-size: 14% 100%;
+  }
 
-  25%  { background-position: 25% 50%;  background-size: 14% 100%; }
-  28%  { background-position: 25% 50%;  background-size: 24% 100%; }
-  32%  { background-position: 25% 50%;  background-size: 14% 100%; }
+  25% {
+    background-position: 25% 50%;
+    background-size: 14% 100%;
+  }
 
-  50%  { background-position: 50% 50%;  background-size: 14% 100%; }
-  53%  { background-position: 50% 50%;  background-size: 24% 100%; }
-  57%  { background-position: 50% 50%;  background-size: 14% 100%; }
+  28% {
+    background-position: 25% 50%;
+    background-size: 24% 100%;
+  }
 
-  75%  { background-position: 75% 50%;  background-size: 14% 100%; }
-  78%  { background-position: 75% 50%;  background-size: 24% 100%; }
-  82%  { background-position: 75% 50%;  background-size: 14% 100%; }
+  32% {
+    background-position: 25% 50%;
+    background-size: 14% 100%;
+  }
 
-  100% { background-position: 100% 50%; background-size: 14% 100%; }
+  50% {
+    background-position: 50% 50%;
+    background-size: 14% 100%;
+  }
+
+  53% {
+    background-position: 50% 50%;
+    background-size: 24% 100%;
+  }
+
+  57% {
+    background-position: 50% 50%;
+    background-size: 14% 100%;
+  }
+
+  75% {
+    background-position: 75% 50%;
+    background-size: 14% 100%;
+  }
+
+  78% {
+    background-position: 75% 50%;
+    background-size: 24% 100%;
+  }
+
+  82% {
+    background-position: 75% 50%;
+    background-size: 14% 100%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+    background-size: 14% 100%;
+  }
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
@@ -185,10 +232,10 @@ body {
 }
 
 .parisienne-font {
-    font-family: var(--font-playfair-sc);
-   
+  font-family: var(--font-playfair-sc);
+
 }
 
 .background-color-section {
-  background: linear-gradient(rgb(255,255,255) 0%, rgb(247,242,234) 40%, rgb(240,232,214) 70%, rgb(255,255,255) 100%);
+  background: linear-gradient(rgb(255, 255, 255) 0%, rgb(247, 242, 234) 40%, rgb(240, 232, 214) 70%, rgb(255, 255, 255) 100%);
 }

@@ -29,7 +29,7 @@ export default function ProjectPage() {
       {/* FIXED HERO (NOT SCROLLABLE) */}
       <section className="fixed inset-0 -z-10 h-[80vh] lg:h-[98vh] w-full">
         <Image
-          src="/images/2b.jpg"
+          src="/images/2b.webp"
           alt="Background"
           fill
           priority
@@ -85,7 +85,7 @@ export default function ProjectPage() {
         />
 
         <motion.div
-          className="mx-auto container gap-6 grid grid-cols-1 lg:grid-cols-2 mt-13 lg:mt-25 pb-30"
+          className="mx-auto container gap-6 grid grid-cols-1 lg:grid-cols-3 mt-13 lg:mt-25 pb-30"
           variants={stagger}
           initial="hidden"
           whileInView="show"

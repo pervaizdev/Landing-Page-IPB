@@ -97,7 +97,7 @@ function Intro({ onDone }) {
       exit={{ opacity: 0, transition: { duration: 0.4 } }}
     >
       <motion.img
-        src="/images/logo.png"
+        src="/images/logo.webp"
         alt="Logo"
         className="h-24 w-24 md:h-32 md:w-32 select-none"
         style={{
@@ -184,7 +184,7 @@ export default function HomePage() {
               </motion.h2>
             </div>
 
-            <div className="container mx-auto bg-white grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 pb-20 justify-items-center mt-12 px-4">
+            <div className="container mx-auto bg-white grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 pb-20 justify-items-center mt-12 px-4">
               {projects.map((item, index) => (
                 <div key={item.id}
                   className={index % 2 === 0 ? "lg:justify-self-end" : "lg:justify-self-start"}>

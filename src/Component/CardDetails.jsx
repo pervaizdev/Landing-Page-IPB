@@ -9,10 +9,22 @@ import {
   HiOutlineBuildingOffice,
   HiOutlineShoppingBag,
   HiOutlineHomeModern,
-  HiOutlineCake,
   HiOutlineHome,
   HiOutlineBolt,
 } from "react-icons/hi2";
+import {
+  LuLayoutGrid,
+  LuStore,
+  LuUtensilsCrossed,
+  LuDumbbell,
+  LuHouse,
+  LuBedSingle,
+  LuBedDouble,
+  LuBuilding2,
+  LuShoppingCart,
+  LuShoppingBag,
+} from "react-icons/lu";
+import { MdOutlineIcecream } from "react-icons/md";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -45,20 +57,23 @@ export default function CardDetails({ project, InfoItem }) {
   const infoItems = [
     { icon: HiOutlineCircleStack, label: "Status", value: project.status },
     {
-      icon: HiOutlineBuildingOffice2,
+      icon: LuLayoutGrid,
       label: "Project Type",
       value: project.projectType,
     },
-    { icon: HiOutlineBuildingOffice2, label: "Floors", value: project.floor },
+    { icon: LuBuilding2, label: "Floors", value: project.floor },
+    { icon: LuStore, label: "Shops", value: project.shopes },
+    { icon: LuShoppingCart, label: "Mart", value: project.mart },
     { icon: HiOutlineBuildingOffice, label: "Offices", value: project.offices },
-    { icon: HiOutlineShoppingBag, label: "Shops", value: project.shopes },
-    { icon: HiOutlineHomeModern, label: "Studios", value: project.studios },
-    { icon: HiOutlineCake, label: "Restaurants", value: project.restaurant },
-    { icon: HiOutlineHome, label: "Bedrooms", value: project.bedrooms },
-    { icon: HiOutlineBolt, label: "Gym", value: project.gym },
+    { icon: LuShoppingBag, label: "Kiosks", value: project.kiosks },
+    { icon: LuUtensilsCrossed, label: "Restaurants", value: project.restaurant },
+    { icon: MdOutlineIcecream, label: "Ice Cream Bar", value: project.icecreambar },
+    { icon: LuHouse, label: "Studios", value: project.studios },
+    { icon: LuBedDouble, label: "Bedrooms", value: project.bedrooms },
+    { icon: LuDumbbell, label: "Gym", value: project.gym },
     {
       icon: HiOutlineCalendarDays,
-      label: "Commencement date",
+      label: "Launch date",
       value: project.commencementDate,
     },
   ].filter((item) => shouldShow(item.value));
