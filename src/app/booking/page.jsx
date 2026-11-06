@@ -52,7 +52,7 @@ export default function BookingPage() {
     };
   }, [lenis]);
   const [buildingId, setBuildingId] = useState(null);
-  const [selectedTypes, setSelectedTypes] = useState([]); 
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const building = bookingData.buildings.find((b) => b.id === buildingId) ?? null;
 
   const selectBuilding = (id, target = "overview") => {
@@ -237,15 +237,17 @@ export default function BookingPage() {
                         Explore the {building?.name} brochure. Drag a page to discover more about the project.
                       </motion.p>
                     </div>
-                    <BrochureBook
-                      pages={BROCHURES[building?.id]?.pages ?? []}
-                      building={building}
-                      title={
-                        BROCHURES[building?.id]?.title ??
-                        `${building?.name ?? "Project"} brochure`
-                      }
-                      pageAspect={BROCHURES[building?.id]?.pageAspect ?? 1}
-                    />
+                    <div className="mx-auto -ml-[4%] w-[108%] h-[700px] md:h-[650px] lg:h-[750px]">
+                      <BrochureBook
+                        pages={BROCHURES[building?.id]?.pages ?? []}
+                        building={building}
+                        title={
+                          BROCHURES[building?.id]?.title ??
+                          `${building?.name ?? "Project"} brochure`
+                        }
+                        pageAspect={BROCHURES[building?.id]?.pageAspect ?? 1}
+                      />
+                    </div>
                   </section>
                 )}
               </motion.div>

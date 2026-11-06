@@ -3,7 +3,7 @@ import { projects } from "@/data/card.js";
 // Component/LocationMapCard.jsx
 export default function LocationMapCard({ project }) {
   return (
-    <div className="lg:px-6 mt-16 px-2">
+    <div className="lg:px-6 mt-40 px-2">
       <h2 className="text-4xl lg:text-5xl parisienne-font text-center lg:text-start text-black">
         Location
       </h2>

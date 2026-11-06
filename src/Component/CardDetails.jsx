@@ -86,16 +86,16 @@ export default function CardDetails({ project, InfoItem }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.15 }}
     >
-      <motion.div variants={fadeUp} className="flex items-center gap-3">
+      {/* <motion.div variants={fadeUp} className="flex items-center gap-3">
         <HiLocationMarker className="text-xl lg:text-3xl text-[#c29e6d]" />
         <p className="font-bold text-sm lg:text-lg text-black">
           {project.location}
         </p>
-      </motion.div>
+      </motion.div> */}
 
       <motion.h1
         variants={fadeUp}
-        className="mt-5 lg:text-7xl text-4xl parisienne-font text-black"
+        className="text-[#0f3d20] lg:text-7xl text-4xl text-center lg:text-start parisienne-font"
       >
         {project.title}
       </motion.h1>
