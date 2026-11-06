@@ -11,11 +11,25 @@ import {
   LuBedSingle,
   LuBedDouble,
   LuBuilding2,
+  LuShoppingCart,
+  LuShoppingBag,
+  LuIceCreamCone,
 } from "react-icons/lu";
 import { unitTypeKey } from "./UnitCard";
 
 // Preferred display order; types not listed here follow in data order.
-const TYPE_ORDER = ["shop", "restaurant", "gym", "office", "studio", "1-bed", "2-bed"];
+const TYPE_ORDER = [
+  "shop",
+  "restaurant",
+  "gym",
+  "office",
+  "studio",
+  "1-bed",
+  "2-bed",
+  "mart",
+  "kiosk",
+  "ice-cream-bar",
+];
 
 const TYPE_LABELS = {
   shop: "Shops",
@@ -23,6 +37,9 @@ const TYPE_LABELS = {
   gym: "Gyms",
   office: "Offices",
   studio: "Studios",
+  mart: "Mart",
+  kiosk: "Kiosk",
+  "ice-cream-bar": "Ice Cream Bar",
 };
 
 const TYPE_ICONS = {
@@ -33,6 +50,9 @@ const TYPE_ICONS = {
   studio: LuHouse,
   "1-bed": LuBedSingle,
   "2-bed": LuBedDouble,
+  mart: LuShoppingCart,
+  kiosk: LuShoppingBag,
+  "ice-cream-bar": LuIceCreamCone,
 };
 function categoryIcon(id) {
   return TYPE_ICONS[id] ?? LuBuilding2;
@@ -40,15 +60,37 @@ function categoryIcon(id) {
 
 export function categoryLabel(id) {
   const bed = id.match(/^(\d+)-bed$/);
-  if (bed) return `${bed[1]} ${Number(bed[1]) === 1 ? "Bedroom" : "Bedrooms"}`;
-  return TYPE_LABELS[id] ?? id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+  if (bed) return `${bed[1]} Bed`;
+
+  return (
+    TYPE_LABELS[id] ??
+    id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  );
 }
 
 /** Property types present in a building's inventory, as stable ids. */
 export function getBuildingTypeIds(building) {
   const ids = new Set();
-  (building?.floors ?? []).forEach((f) => (f.units ?? []).forEach((u) => ids.add(unitTypeKey(u))));
-  const rank = (id) => (TYPE_ORDER.includes(id) ? TYPE_ORDER.indexOf(id) : TYPE_ORDER.length);
+
+  (building?.floors ?? []).forEach((f) =>
+    (f.units ?? []).forEach((u) => {
+      const id = unitTypeKey(u);
+
+      // Prime Gold does not offer 1 Bed units
+      if (building?.id === "prime-gold" && id === "1-bed") {
+        return;
+      }
+
+      ids.add(id);
+    })
+  );
+
+  const rank = (id) =>
+    TYPE_ORDER.includes(id)
+      ? TYPE_ORDER.indexOf(id)
+      : TYPE_ORDER.length;
+
   return [...ids].sort((a, b) => rank(a) - rank(b));
 }
 

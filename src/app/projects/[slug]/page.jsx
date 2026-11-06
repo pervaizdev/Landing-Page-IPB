@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { useState, use } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { projects } from "@/data/card";
@@ -10,6 +10,8 @@ import Description from "@/Component/ProjectDescription.jsx";
 import MediaSection from "@/Component/MediaSection";
 import Location from "@/Component/Location";
 import { motion } from "framer-motion";
+import BrochureBook from "@/Component/booking/BrochureBook";
+import bookingData from "@/data/booking.json";
 import {
   AnimatedSection,
   AnimatedImage,
@@ -31,6 +33,26 @@ const heroContainer = {
   show: { transition: { staggerChildren: 0.13, delayChildren: 0.2 } },
 };
 
+const BROCHURES = {
+  "prime-mall-and-suites": {
+    pages: Array.from(
+      { length: 60 },
+      (_, i) => `/brochure/prime mall and suites/page-${i + 1}.webp`
+    ),
+    title: "Prime Mall & Suites brochure",
+    pageAspect: 1,
+  },
+
+  "prime-gold": {
+    pages: Array.from(
+      { length: 70 },
+      (_, i) => `/brochure/Prime Gold/page-${i + 1}.webp`
+    ),
+    title: "Prime Gold brochure",
+    pageAspect: 1,
+  },
+};
+
 function InfoItem({ icon: Icon, label, value }) {
   return (
     <div className="flex items-center gap-4">
@@ -47,6 +69,11 @@ function InfoItem({ icon: Icon, label, value }) {
 
 export default function Page({ params }) {
   const { slug } = use(params);
+  const building = bookingData.buildings.find(
+    (b) => b.id === slug
+  ) ?? null;
+
+  const brochure = building ? BROCHURES[building.id] : null;
 
   const project = projects.find((p) => p.id === slug);
   if (!project) return notFound();
@@ -117,6 +144,73 @@ export default function Page({ params }) {
         <AnimatedSection>
           <FeaturesAmenities />
         </AnimatedSection>
+
+        {building && brochure && (
+          <section>
+            <div className="mx-auto mb-12 mt-[120px] lg:mt-[180px] max-w-3xl text-center">
+              <motion.span
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 0.9,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-[#d1b38c] bg-[#d1b38c]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#8B5E3C] shadow-2xs"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[#d1b38c]" />
+                Our Brochure
+              </motion.span>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 1.1,
+                  delay: 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mt-5 text-4xl parisienne-font text-[#0f3d20] lg:text-5xl"
+              >
+                {building.name} Brochure
+              </motion.h2>
+
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 1.0,
+                  delay: 0.25,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mx-auto mt-5 h-[2px] w-24 origin-center bg-linear-to-r from-transparent via-[#c29e6d] to-transparent"
+              />
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 1.0,
+                  delay: 0.2,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mx-auto mt-5 max-w-2xl leading-7 text-gray-500 text-sm md:text-base"
+              >
+                Explore the {building.name} brochure. Drag a page to discover more about the project.
+              </motion.p>
+            </div>
+
+            <BrochureBook
+              pages={brochure.pages}
+              building={building}
+              title={brochure.title}
+              pageAspect={brochure.pageAspect}
+            />
+          </section>
+        )}
 
         <AnimatedDivider className="border mt-15 mb-10" />
 
