@@ -109,8 +109,10 @@ export const projects = [
         { id: "p1", src: "/images/pms1.webp", alt: "Photo 1" },
         { id: "p2", src: "/images/pms2.webp", alt: "Photo 2" },
         { id: "p3", src: "/images/pms3.webp", alt: "Photo 3" },
-        { id: "p4", src: "/images/pms4.webp", alt: "Photo 4" },
-        { id: "p5", src: "/images/pms5.webp", alt: "Photo 5" },
+        // { id: "p4", src: "/images/pms4.webp", alt: "Photo 4" },
+        // { id: "p5", src: "/images/pms5.webp", alt: "Photo 5" },
+        { id: "p6", src: "/images/pms6.jpeg", alt: "Photo 6" },
+        { id: "p7", src: "/images/pms7.jpeg", alt: "Photo 7" },
       ],
       videos: [
         {
