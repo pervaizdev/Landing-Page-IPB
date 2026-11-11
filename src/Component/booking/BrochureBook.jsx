@@ -45,7 +45,6 @@ function Underlay({ side, visible }) {
   return (
     <motion.div
       className={`pointer-events-none absolute inset-y-0 w-1/2 ${side === "left" ? "left-0" : "right-0"}`}
-      style={{ boxShadow: "0 24px 48px -18px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.12)" }}
       animate={{ opacity: visible ? 1 : 0 }}
       transition={{ duration: 0.4 }}
     />
@@ -429,8 +428,6 @@ function InteractiveBrochureBook({
             }`}
           style={{ aspectRatio: `${pageAspect * 2}`, perspective: 2500 }}
         >
-          {/* floor shadow */}
-          <div className="pointer-events-none absolute -bottom-10 left-[6%] right-[6%] h-14 rounded-[50%] bg-black/35 blur-2xl" />
           <Underlay side="left" visible={flipped > 0} />
           <Underlay side="right" visible={flipped < total} />
           {/* ribbon bookmark */}

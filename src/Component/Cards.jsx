@@ -42,7 +42,7 @@ export default function ProjectCard({ item }) {
 
               {/* Status Badge */}
               <span
-                className={`rounded-full px-3 py-2 text-xs font-semibold backdrop-blur-md border transition ${
+                className={`rounded-full px-2 py-2 text-xs font-semibold backdrop-blur-md border transition ${
                   isCompleted
                     ? "bg-white/90 text-black border-white/40"
                     : "bg-black/60 text-white border-white/20"
